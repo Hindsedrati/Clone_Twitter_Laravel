@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'pseudo',
         'email',
         'password',
     ];
@@ -42,4 +43,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get all tweet that owns the user.
+     */
+    public function tweets()
+    {
+        return $this->hasMany(Tweet::class);
+    }
 }
