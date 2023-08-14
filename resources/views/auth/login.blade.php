@@ -1,8 +1,8 @@
 <x-guest-layout>
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <!-- <x-auth-session-status class="mb-4" :status="session('status')" /> -->
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('user.login') }}">
         @csrf
 
         <!-- Email Address -->
@@ -38,6 +38,10 @@
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+
+            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('user.register') }}">
+                {{ __('Not registered?') }}
+            </a>
 
             <x-primary-button class="ml-3">
                 {{ __('Log in') }}
