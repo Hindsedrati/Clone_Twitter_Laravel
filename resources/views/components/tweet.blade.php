@@ -1,0 +1,90 @@
+@props(['tweet' => $tweet])
+
+<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
+    <div class="p-6 text-gray-900 dark:text-gray-100">
+        <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="text-muted">{{'@'}}{{ $tweet->user->name }}</span> - <span><?= convertTimeToString($tweet->created_at); ?></span>
+
+        <pre>{{ $tweet->tweet }}</pre>
+
+        @if($tweet->retweets)
+            <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div>
+            <a href="{{ route('user.profile', $tweet->retweet->user->name) }}"><b>{{ $tweet->retweet->user->username }}</b></a> <span class="text-muted">{{'@'}}{{ $tweet->retweet->user->name }}</span> - <span><?= convertTimeToString($tweet->created_at); ?></span>
+            
+            <pre>{{ $tweet->retweet->tweet }}</pre>
+        
+            <a href="//{{request()->getHttpHost()}}/tweet/{{$tweet->retweets}}">https://{{request()->getHttpHost()}}/tweet/{{$tweet->retweets}}</a>
+        @endif
+
+        <div class="flex items-center">
+            <div class="flex"> <!-- commentaires -->
+                <a class="flex" href="{{ route('tweet.comments', $tweet->uuid) }}">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1">
+                        <path fill="currentColor" d="M9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12Z"/>
+                        <path fill="currentColor" d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z"/>
+                        <path fill="currentColor" d="M17 12C17 12.5523 16.5523 13 16 13C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11C16.5523 11 17 11.4477 17 12Z"/>
+                        <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"/>
+                    </svg>
+                    <span>commentaires</span>
+                </a>
+            </div>
+
+            <div class="mr-1 ml-1"> | </div>
+
+            <div class="flex"> <!-- retweet -->
+                <a class="flex" href="{{ route('tweet.retweet', $tweet->uuid) }}">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1">
+                        <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M19.5 12L14.5 17M19.5 12L14.5 7M19.5 12L13 12M9.5 12C7.83333 12 4.5 11 4.5 7"/>
+                    </svg>
+                    <span>Retweet</span>
+                </a>
+            </div>
+
+            <div class="mr-1 ml-1"> | </div>
+
+            <div class="flex"> <!-- like -->
+                @auth
+                    @if (!$tweet->likedBy(auth()->user()))
+                        <form action="{{ route('tweet.likes', $tweet) }}" method="post" class="mr-1 flex justify-between items-center">
+                            @csrf
+                            <button type="submit" class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.4" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" fill="none" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('tweet.likes', $tweet) }}" method="post" class="mr-1 flex justify-between items-center">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" stroke-width="1.4" stroke="red" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                            </button>
+                        </form>
+                    @endif
+                @endauth
+
+                <span>
+                    @if($tweet->likes)
+                        {{ $tweet->likes->count() }} {{ Str::plural('like', $tweet->likes->count()) }}
+                    @else
+                        0 like
+                    @endif
+                </span>
+            </div>
+
+            <div class="mr-1 ml-1"> | </div>
+
+            <div class="flex"> <!-- analytics -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1">
+                    <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 22H21"/>
+                    <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M3 17C3 17.9428 3 18.4142 3.29289 18.7071C3.58579 19 4.05719 19 5 19C5.94281 19 6.41421 19 6.70711 18.7071C7 18.4142 7 17.9428 7 17V11C7 10.0572 7 9.58579 6.70711 9.29289C6.41421 9 5.94281 9 5 9C4.05719 9 3.58579 9 3.29289 9.29289C3 9.58579 3 10.0572 3 11V13"/>
+                    <path stroke="currentColor" stroke-width="1.5" d="M10 7C10 6.05719 10 5.58579 10.2929 5.29289C10.5858 5 11.0572 5 12 5C12.9428 5 13.4142 5 13.7071 5.29289C14 5.58579 14 6.05719 14 7V17C14 17.9428 14 18.4142 13.7071 18.7071C13.4142 19 12.9428 19 12 19C11.0572 19 10.5858 19 10.2929 18.7071C10 18.4142 10 17.9428 10 17V7Z"/>
+                    <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M21 11V17C21 17.9428 21 18.4142 20.7071 18.7071C20.4142 19 19.9428 19 19 19C18.0572 19 17.5858 19 17.2929 18.7071C17 18.4142 17 17.9428 17 17V4C17 3.05719 17 2.58579 17.2929 2.29289C17.5858 2 18.0572 2 19 2C19.9428 2 20.4142 2 20.7071 2.29289C21 2.58579 21 3.05719 21 4V7"/>
+                </svg>
+                <span>{{ $tweet->analytics->count() }}</span>
+            </div>
+        </div>
+    </div>
+</div>

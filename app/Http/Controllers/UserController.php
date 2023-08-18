@@ -30,11 +30,11 @@ class UserController extends Controller
      * 
      * @return Redirect dashboard
      */
-    public function registerStore(Request $request): Redirect
+    public function registerStore(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:50', 'unique:'.User::class],
-            'pseudo' => ['required', 'string', 'max:65'],
+            'username' => ['required', 'string', 'max:65'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ],
@@ -43,9 +43,9 @@ class UserController extends Controller
             'name.required' => 'Le nom est obligatoire',
             'name.string' => 'Le nom doit être une chaine de caractères',
             'name.max' => 'Le nom ne doit pas dépasser 50 caractères',
-            'pseudo.required' => 'Le nom est obligatoire',
-            'pseudo.string' => 'Le nom doit être une chaine de caractères',
-            'nampseudoe.max' => 'Le nom ne doit pas dépasser 50 caractères',
+            'username.required' => 'Le nom est obligatoire',
+            'username.string' => 'Le nom doit être une chaine de caractères',
+            'username.max' => 'Le nom ne doit pas dépasser 50 caractères',
             'email.required' => 'L\'adresse mail est obligatoire',
             'email.email' => 'L\'email doit être valide',
             'email.unique' => 'Cette adresse mail est déjà utilisée',
@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'pseudo' => $request->pseudo,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -82,7 +82,7 @@ class UserController extends Controller
      * 
      * @return Redirect dashboard
      */
-    public function login(Request $request): Redirect
+    public function login(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -110,7 +110,8 @@ class UserController extends Controller
      *
      * @return Redirect dashboard
      */
-    public function logout() {
+    public function logout(): RedirectResponse
+    {
         Auth::guard('user')->logout();
 
         $request->session()->invalidate();
@@ -118,5 +119,26 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::route('tweets.dashboard');
+    }
+
+    /**
+     * Display page profile
+     * 
+     * @return View user/profile
+     */
+    public function userProfileView(Request $request): View
+    {
+
+        $profile = User::where('name', $request->name)->firstOrFail();
+        // return view('dashboard', [ 'tweets' => Tweet::orderBy('id', 'desc')->get() ]);
+
+        $tweets = $profile->tweets()
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return view('user/profile', [
+            'profile' => $profile,
+            'tweets' => $tweets,
+        ]);
     }
 }

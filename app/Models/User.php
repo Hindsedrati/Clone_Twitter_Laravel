@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'pseudo',
+        'username',
         'email',
         'password',
     ];
@@ -50,5 +50,15 @@ class User extends Authenticatable
     public function tweets()
     {
         return $this->hasMany(Tweet::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+    
+    public function recievedLikes()
+    {
+        return $this->hasManyThrough(Like::class, Tweet::class);
     }
 }
