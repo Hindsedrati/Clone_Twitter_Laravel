@@ -16,7 +16,7 @@ class TweetSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'test',
-            'pseudo' => '@LeGrizzly',
+            'username' => '@LeGrizzly',
             'email' => 'test@tw.com',
             'role_id' => 1,
             'email_verified_at' => NULL,
@@ -28,7 +28,7 @@ class TweetSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'test',
-            'pseudo' => '@mathilde',
+            'username' => '@mathilde',
             'email' => 'test2@tw.com',
             'role_id' => 1,
             'email_verified_at' => NULL,
