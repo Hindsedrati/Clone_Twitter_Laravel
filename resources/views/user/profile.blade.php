@@ -14,6 +14,31 @@
                 <div class="max-w-xl">
                     {{ $profile->username }}
                 </div>
+                <div>
+                    @auth
+                        @if (auth()->id() !== $profile->id)
+                            @if($follow = \App\Models\Follow::query()
+                                    ->where('follower_user_id', auth()->id())
+                                    ->where('followed_user_id', $profile->id)
+                                    ->first()
+                                    ?->id    
+                            )
+                                <form method="DELETE" action="{{ route('user.follow', $profile) }}">
+                                    @csrf
+                                    <x-secondary-button class="ml-3">
+                                        Unfollow
+                                    </x-secondary-button>
+                                </form>
+                            @else
+                                <form method="POST" action="{{ route('user.follow', $profile) }}">
+                                    @csrf
+                                    <x-primary-button class="ml-3">
+                                        Follow
+                                    </x-primary-button>
+                                </form>
+                            @endif
+                        @endif
+                    @endauth
             </div>
         </div>
 
