@@ -27,11 +27,12 @@ class ExplorerController extends Controller
     public function explorerView(String $string): View
     {
         $tweets = Tweet::where('comments', null)
-            ->where('tweet', 'like', '%#%')
+            ->where('tweet', 'like', '%#'.$string.'%')
             ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
+            // ->ddRawSql();
             ->paginate(10);
-        
+
         foreach ($tweets as $tweet)
         {
             $tweet->tweet = $this->hashtag_links($tweet->tweet);
