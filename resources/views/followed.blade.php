@@ -31,16 +31,24 @@
         @endif
 
         <div class="flex mt-2 mb-4 rounded-md bg-gray-100 relative tabs">
-            <button class="tabs-item w-full relative z-10 py-1 my-2 ml-2 text-center rounded-md text-sm select-none focus:outline-none dark:bg-gray-900 dark:text-gray-100">For You</button>
-            <a href="{{ route('tweets.followed') }}" class="tabs-item w-full relative z-10 py-1 my-2 ml-2 text-center rounded-md text-sm cursor-pointer select-none focus:outline-none">Followed</a>
+            <a href="{{ route('tweets.dashboard') }}" class="tabs-item w-full relative z-10 py-1 my-2 ml-2 text-center rounded-md text-sm select-none focus:outline-none">For You</a>
+            <button class="tabs-item w-full relative z-10 py-1 my-2 ml-2 text-center rounded-md text-sm cursor-pointer select-none focus:outline-none dark:bg-gray-900 dark:text-gray-100">Followed</button>
             <!-- <span class="tab-item-animate rounded-md bg-white active"></span> -->
         </div>
 
-        @foreach($tweets as $key => $tweet)
-            @if ($key > 0) <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div> @endif
+        @if ($tweets->count() === 0)
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <p>No followed tweets yet.</p>
+                </div>
+            </div>
+        @else
+            @foreach($tweets as $key => $tweet)
+                @if ($key > 0) <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div> @endif
 
-            <x-tweet :tweet="$tweet" />
-        @endforeach
+                <x-tweet :tweet="$tweet" />
+            @endforeach
+        @endif
     </div>
 
     {{ $tweets->links() }}

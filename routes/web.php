@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\TweetLikeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserFollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,6 @@ use App\Http\Controllers\UserController;
 Route::get('/', [TweetController::class, 'dashboard'])->name('tweets.dashboard');
 
 Route::get('profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
-
 Route::get('/tweet/{uuid}', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
 
 // Route::get('/dashboard', function () { return view('dashboard'); })->middleware(['auth', 'verified'])->name('dashboard');
@@ -61,6 +61,10 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
 
         Route::post('/tweet/{tweet}/likes', [TweetLikeController::class, 'addTweetLikes'])-> name('tweet.likes');
         Route::delete('/tweet/{tweet}/likes', [TweetLikeController::class, 'destroyTweetLikes'])-> name('tweet.likes');
+
+        Route::get('/follow', [TweetController::class, 'dashboardFollowed'])->name('tweets.followed');
+        Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
+        Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
     });
 
     /*
