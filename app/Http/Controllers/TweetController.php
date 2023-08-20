@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 use App\Models\Analytic;
+use App\Models\Follow;
 use App\Models\Like;
 use App\Models\User;
 use App\Models\Tweet;
@@ -46,6 +47,18 @@ class TweetController extends Controller
         }
 
         return view('dashboard', [ 'tweets' => $tweets ]);
+    }
+
+    /**
+     * Display a listing followed of the resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function dashboardFollowed(): View
+    {
+        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->following->pluck('id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
+
+        return view('followed', [ 'tweets' => $tweets ]);
     }
 
     /**
