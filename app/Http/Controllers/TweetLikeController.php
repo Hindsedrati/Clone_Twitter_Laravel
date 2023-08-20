@@ -21,7 +21,7 @@ class TweetLikeController extends Controller
     public function addTweetLikes(Tweet $tweet, Request $request)
     {
         if ($tweet->likedBy(Auth::guard('user')->user())) {
-            return response(null, 409);
+            return response('You cannot like more than one time', 409);
         }
 
         $tweet->likes()->create([
