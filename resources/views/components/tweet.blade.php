@@ -2,16 +2,21 @@
 
 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
     <div class="p-6 text-gray-900 dark:text-gray-100">
-        <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="text-muted">{{'@'}}{{ $tweet->user->name }}</span> - <span><?= convertTimeToString($tweet->created_at); ?></span>
+        <div class="flex items-center">
+            <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+        </div>
 
-        <pre>{{ $tweet->tweet }}</pre>
+        <div class="flex mb-4 mt-2">{!! $tweet->tweet !!}</div>
 
         @if($tweet->retweets)
             <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div>
-            <a href="{{ route('user.profile', $tweet->retweet->user->name) }}"><b>{{ $tweet->retweet->user->username }}</b></a> <span class="text-muted">{{'@'}}{{ $tweet->retweet->user->name }}</span> - <span><?= convertTimeToString($tweet->created_at); ?></span>
             
-            <pre>{{ $tweet->retweet->tweet }}</pre>
-        
+            <div class="flex items-center">
+                <a href="{{ route('user.profile', $tweet->retweet->user->name) }}"><b>{{ $tweet->retweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->retweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+            </div>
+
+            <div class="flex mb-4 mt-2">{!! $tweet->retweet->tweet !!}</div>
+
             <a href="//{{request()->getHttpHost()}}/tweet/{{$tweet->retweets}}">https://{{request()->getHttpHost()}}/tweet/{{$tweet->retweets}}</a>
         @endif
 

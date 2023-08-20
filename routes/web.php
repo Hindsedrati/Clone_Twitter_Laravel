@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ExplorerController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\TweetLikeController;
 use App\Http\Controllers\UserController;
@@ -61,6 +62,8 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
 
         Route::post('/tweet/{tweet}/likes', [TweetLikeController::class, 'addTweetLikes'])-> name('tweet.likes');
         Route::delete('/tweet/{tweet}/likes', [TweetLikeController::class, 'destroyTweetLikes'])-> name('tweet.likes');
+
+        Route::get('/explorer/{string}', [ExplorerController::class, 'explorerView'])->name('tweet.explorer');
     });
 
     /*
