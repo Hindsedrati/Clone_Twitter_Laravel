@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ExplorerController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\TweetLikeController;
 use App\Http\Controllers\UserController;
@@ -65,6 +66,8 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::get('/follow', [TweetController::class, 'dashboardFollowed'])->name('tweets.followed');
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
+
+        Route::get('/explorer/{string}', [ExplorerController::class, 'explorerView'])->name('tweet.explorer');
     });
 
     /*

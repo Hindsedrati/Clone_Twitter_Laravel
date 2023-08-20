@@ -28,19 +28,21 @@ class TweetController extends Controller
     public function dashboard(): View
     {
         $tweets = Tweet::where('comments', null)
-            // ->with(['user', 'Likes'])
+            ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
-            // ->take(300)
-            // ->get();
 
         if (Auth::id()) {
-            foreach ($tweets as $tweet) {
-                if (!$tweet->AnalyticsBy(Auth::guard('user')->user())) {
+            foreach ($tweets as $tweet)
+            {
+                if (!$tweet->AnalyticsBy(Auth::guard('user')->user()))
+                {
                     $tweet->Analytics()->create([
                         'user_id' => Auth::guard('user')->user()->id,
                     ]);
                 }
+
+                $tweet->tweet = $this->hashtag_links($tweet->tweet);
             }
         }
 
@@ -172,6 +174,11 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->first();
 
+        foreach ($tweets as $tweet)
+        {
+            $tweet->tweet = $this->hashtag_links($tweet->tweet);
+        }
+
         return view('tweet/retweet', [ 'tweet' => $tweet ]);
     }
 
@@ -238,10 +245,19 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->first();
 
+        foreach ($tweets as $tweet)
+        {
+            $tweet->tweet = $this->hashtag_links($tweet->tweet);
+        }
+
         $comments = Tweet::where('comments', $request->uuid)->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
-            // ->get();
+        
+        foreach ($comments as $tweet)
+        {
+            $tweet->tweet = $this->hashtag_links($tweet->tweet);
+        }
 
         return view('tweet/comments', [ 'tweet' => $tweet, 'comments' => $comments ]);
     }
