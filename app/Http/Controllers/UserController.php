@@ -12,6 +12,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 use App\Models\User;
+use App\Models\Tweet;
 
 class UserController extends Controller
 {
@@ -128,17 +129,17 @@ class UserController extends Controller
      */
     public function userProfileView(Request $request): View
     {
-
         $profile = User::where('name', $request->name)->firstOrFail();
-        // return view('dashboard', [ 'tweets' => Tweet::orderBy('id', 'desc')->get() ]);
 
         $tweets = $profile->tweets()
             ->orderBy('id', 'desc')
             ->paginate(10);
+        
+        foreach ($tweets as $tweet)
+        {
+            $tweet->tweet = $this->hashtag_links($tweet->tweet);
+        }
 
-        return view('user/profile', [
-            'profile' => $profile,
-            'tweets' => $tweets,
-        ]);
+        return $this->renderView('user.profile', [ 'profile' => $profile, 'tweets' => $tweets, ]);
     }
 }
