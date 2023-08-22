@@ -14,21 +14,39 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased">
-        <div class="flex h-screen bg-gray-200 font-roboto">
-            @include('layouts.sidebar')
-            
+    <body class="antialiased dark:bg-gray-900">
+
+        <div class="flex h-screen dark:bg-gray-900 sm:flex">
             <div class="flex-1 flex flex-col overflow-hidden">
-                <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+                @include('layouts.header')
 
-                    @include('layouts.header')
+                <div class="flex h-full">
+                    @include('layouts.sidebar', [ 'hashtags' => $hashtags ])
 
-                    <main>
-                        {{ $slot }}
-                    </main>
+                    @include('layouts.main', [ 'tweets' => $tweets ])
+
+                    @include('layouts.rightbar')
                 </div>
             </div>
         </div>
-
     </body>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(13deg, #7bcfeb 14%, #e685d3 64%);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(13deg, #c7ceff 14%, #f9d4ff 64%);
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: inset 7px 10px 12px #f0f0f0;
+        }
+    </style>
 </html>

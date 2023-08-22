@@ -1,10 +1,7 @@
-<?php
-    include_once(app_path().'/includes/functions.php');
-?>
-<x-app-layout>
-    <div style="width: 625px;">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow sm:rounded-lg">
+<main class="">
+    <div class="flex w-full mx-auto px-6 py-8">
+        <div class="border-4 border-dashed border-gray-900 h-full text-gray-900 w-full">
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow rounded-lg">
                 <div class="max-w-xl">
                     <b>{{ $profile->username }}</b> <span class="text-muted">{{'@'}}{{ $profile->name }}</span>
 
@@ -28,7 +25,7 @@
                 </div>
                 
                 @auth
-                    <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div>
+                    <x-divider />
                     
                     <div class="max-w-xl text-right">
                         @if (auth()->id() !== $profile->id)
@@ -53,20 +50,17 @@
                 @endauth
             </div>
 
-
-            <div class="lg:px-8 max-w-7xl mt-16 mx-auto">
+            <div class="max-w-7xl mt-16 mx-auto">
                 @foreach($tweets as $key => $tweet)
-                    @if ($key > 0) <div class="separator" style="border: 1px solid rgb(214, 220, 234);
-                        margin-bottom: 10px;
-                        margin-top: 10px;
-                        width: 100%;"></div>
-                    @endif
+                    @if ($key > 0) <x-divider /> @endif
 
                     <x-tweet :tweet="$tweet" />
                 @endforeach
             </div>
-
-            {{ $tweets->links() }}
+            
+            <div class="mt-6 pagination">
+                {{ $tweets->links() }}
+            </div>
         </div>
     </div>
-</x-app-layout>
+</main>

@@ -24,8 +24,8 @@ use App\Http\Controllers\UserFollowController;
 // Route::get('/', function () { return view('welcome'); });
 Route::get('/', [TweetController::class, 'dashboard'])->name('tweets.dashboard');
 
-Route::get('profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
-Route::get('/tweet/{uuid}', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
+Route::get('/profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
+Route::get('/tweet/{uuid}/comments', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
 
 // Route::get('/dashboard', function () { return view('dashboard'); })->middleware(['auth', 'verified'])->name('dashboard');
 
