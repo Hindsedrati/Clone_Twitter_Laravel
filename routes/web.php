@@ -27,6 +27,8 @@ Route::get('/', [TweetController::class, 'dashboard'])->name('tweets.dashboard')
 Route::get('/profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
 Route::get('/tweet/{uuid}/comments', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
 
+Route::get('/explorer/{string}', [ExplorerController::class, 'explorerView'])->name('tweet.explorer');
+
 // Route::get('/dashboard', function () { return view('dashboard'); })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('guest')->group(function () {
@@ -45,7 +47,7 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | User Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    Route::group(['middleware' => 'checkRole:user'], function() {
+    Route::group(['middleware' => 'checkRole:user', 'middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
         // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -66,8 +68,6 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::get('/follow', [TweetController::class, 'dashboardFollowed'])->name('tweets.followed');
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
-
-        Route::get('/explorer/{string}', [ExplorerController::class, 'explorerView'])->name('tweet.explorer');
     });
 
     /*
@@ -75,9 +75,9 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | Modo Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    // Route::group(['middleware' => 'checkRole:modo'], function() {
+    Route::group(['middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
         
-    // });
+    });
 
     /*
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
