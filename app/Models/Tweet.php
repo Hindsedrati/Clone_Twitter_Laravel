@@ -22,6 +22,11 @@ class Tweet extends Model
         return $this->belongsTo(Tweet::class, 'retweets', 'uuid');
     }
 
+    public function comment()
+    {
+        return $this->hasOne(Tweet::class, 'uuid', 'comments');
+    }
+
     public function likedBy(User $user)
     {
         return $this->likes->contains('user_id', $user->id);
