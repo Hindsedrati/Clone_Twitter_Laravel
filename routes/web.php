@@ -47,7 +47,9 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | User Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    Route::group(['middleware' => 'checkRole:user', 'middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
+    // Route::group(['middleware' => 'checkRole:user', 'middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
+    Route::group(['middleware' => 'checkRole:user,modo,admin'], function() {
+
         // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -65,9 +67,13 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::post('/tweet/{tweet}/likes', [TweetLikeController::class, 'addTweetLikes'])-> name('tweet.likes');
         Route::delete('/tweet/{tweet}/likes', [TweetLikeController::class, 'destroyTweetLikes'])-> name('tweet.likes');
 
+        Route::delete('/tweet/{uuid}/delete', [TweetController::class, 'tweetDestroy'])->name('tweet.delete');
+
         Route::get('/follow', [UserFollowController::class, 'dashboardFollowed'])->name('tweets.followed');
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
+    
+        Route::post('/tweet/{tweet}/signale', [TweetController::class, 'addTweetSignale'])->name('tweet.signale');
     });
 
     /*
@@ -75,8 +81,10 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | Modo Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    Route::group(['middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
-        
+    Route::group(['prefix' => 'modo', 'middleware' => 'checkRole:modo,admin'], function() {
+
+        Route::delete('/tweet/{uuid}/delete', [TweetController::class, 'tweetDestroyModo'])->name('modo.tweet.delete');
+
     });
 
     /*
@@ -84,7 +92,7 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | Admin Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    // Route::group(['prefix' => 'admin', 'middleware' => ['checkRole:admin']], function() {
+    // Route::group(['prefix' => 'admin', 'middleware' => 'checkRole:admin'], function() {
 
     // });
 });

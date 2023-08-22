@@ -40,9 +40,12 @@ class TweetController extends Controller
                         'user_id' => Auth::guard('user')->user()->id,
                     ]);
                 }
-
-                $tweet->tweet = $this->hashtag_links($tweet->tweet);
             }
+        }
+
+        foreach ($tweets as $tweet)
+        {
+            $tweet->tweet = $this->hashtag_links($tweet->tweet);
         }
 
         // return view('dashboard', [ 'tweets' => $tweets, 'hashtags' => $hashtags ]);
@@ -211,17 +214,63 @@ class TweetController extends Controller
      * @param int $uuid
      * @return \Illuminate\Support\Facades\Redirect
      */
-    public function destroy($uuid): RedirectResponse
+    public function tweetDestroy(Request $request): RedirectResponse
     {
-        $tweet = Tweet::find($uuid);
+        $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
+
+        if ($tweet->comment) {
+            if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
+                if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
+                    unlink(public_path() . $tweet->file);
+                }
+    
+                $tweet->tweet = 'Ce tweet a été supprimé par son auteur';
+                $tweet->save();
+                
+                return back();
+            }
+        }
+
+        if (Auth::guard('user')->user()->id === $tweet->user_id) {
+            if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
+                unlink(public_path() . $tweet->file);
+            }
+
+            $tweet->delete();
+
+            return back();
+        }
+
+        abort(403);
+    }
+
+    /**
+     * 
+     */
+    public function addTweetSignale(Request $request): RedirectResponse
+    {
+        echo 'addTweetSignale';
+        die();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $uuid
+     * @return \Illuminate\Support\Facades\Redirect
+     */
+    public function tweetDestroyModo(Request $request): RedirectResponse
+    {
+        $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
 
         if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
             unlink(public_path() . $tweet->file);
         }
 
-        $tweet->delete();
+        $tweet->tweet = 'Ce tweet a été supprimé par un modérateur';
+        $tweet->save();
 
-        return Redirect::route('tweets.dashboard');
+        return back();
     }
 
     /**
@@ -232,7 +281,7 @@ class TweetController extends Controller
      */
     public function tweetCommentsView(Request $request): View
     {
-        $tweet = Tweet::where('uuid', $request->uuid)->first();
+        $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
 
         $tweet->tweet = $this->hashtag_links($tweet->tweet);
 

@@ -1,9 +1,45 @@
 @props(['tweet' => $tweet])
 
-<div class="flex bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg w-full max-w-xl h-60 items-center mx-auto bg-green-400 border-gray-600">
-    <div class="p-6 text-gray-900 dark:text-gray-100">
-        <div class="flex items-center">
-            <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+<div class="dark:bg-gray-800 sm:rounded-lg">
+    <div class="dark:text-gray-100 p-6 text-gray-900">
+        <div class="flex justify-between">
+            <div class="">
+                <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+            </div>
+
+            @auth
+                <button class="dropdown:block relative font-medium px-2 py-1 rounded-md text-xs" style="--tw-ring-color: #270000; --tw-ring-inset: inset; --tw-text-opacity: 1; color: rgb(185 28 28 / var(--tw-text-opacity)); --tw-bg-opacity: 1; background-color: #270000;" role="navigation" aria-haspopup="true">
+                    <div class="flex items-center">
+                        <span class="px-2 text-gray-700">...</span>
+                    </div>
+                    <ul class="absolute left-0 hidden w-auto p-2 mt-3 space-y-2 text-sm bg-white border border-gray-100 rounded-lg shadow-lg" aria-label="submenu">
+
+                        <form action="{{ route('tweet.signale', $tweet->uuid) }}" method="post">
+                            @csrf
+                            <input type="submit" value="Signaler" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
+                        </form>
+
+                        <x-divider />
+
+                        @if(auth()->user()->id == $tweet->user_id)
+                            <form action="{{ route('tweet.delete', $tweet->uuid) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" value="Delete" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
+                            </form>
+                        @endif
+
+                        @if(in_array(auth()->user()->role_id, [2,3]))
+                            <form action="{{ route('modo.tweet.delete', $tweet->uuid) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" value="Delete (Modo)" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
+                            </form>
+                        @endif
+
+                    </ul>
+                </button>
+            @endauth
         </div>
 
         <div class="flex mb-4 mt-2">{!! $tweet->tweet !!}</div>
