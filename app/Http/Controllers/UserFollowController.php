@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 use App\Models\Follow;
+use App\Models\Tweet;
 use App\Models\User;
 
 class UserFollowController extends Controller
