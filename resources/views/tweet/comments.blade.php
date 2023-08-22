@@ -1,13 +1,12 @@
-<?php
-    include_once(app_path().'/includes/functions.php');
-?>
-<x-app-layout>
-    <div style="width: 625px;">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <x-tweet :tweet="$tweet" />
-        </div>
+<main class="">
+    <div class="flex w-full mx-auto px-6 py-8">
+        <div class="border-4 border-dashed border-gray-900 h-full text-gray-900 w-full">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-16">
+            <div class="mx-auto space-y-6">
+                <x-tweet :tweet="$tweet" />
+            </div>
+
+            <x-divider />
 
             @if(Auth::id())
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -24,29 +23,27 @@
                         </form>
                     </div>
                 </div>
-                <div class="separator" style="border: 1px solid rgb(214, 220, 234); margin-bottom: 10px; margin-top: 10px; width: 100%;"></div>
+
+                <x-divider />
             @endif
-            
+
             @if(isset($comments) && count($comments) > 0)
                 @foreach($comments as $key => $tweet)
-                    @if ($key > 0) <div class="separator" style="border: 1px solid rgb(214, 220, 234);
-                        margin-bottom: 10px;
-                        margin-top: 10px;
-                        width: 100%;"></div>
-                    @endif
+                    @if ($key > 0) <x-divider /> @endif
 
                     <x-tweet :tweet="$tweet" />
                 @endforeach
+
+                <div class="mt-6 pagination">
+                    {{ $comments->links() }}
+                </div>
             @else
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg ">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <p>No comments yet.</p>
                     </div>
                 </div>
             @endif
-
         </div>
-
-        {{ $comments->links() }}
     </div>
-</x-app-layout>
+</main>

@@ -1,14 +1,12 @@
-<?php
-    include_once(app_path().'/includes/functions.php');
-?>
-<x-app-layout>
-    <div style="width: 625px;">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <x-tweet :tweet="$tweet" />
-        </div>
+<main class="">
+    <div class="flex w-full mx-auto px-6 py-8">
+        <div class="border-4 border-dashed border-gray-900 h-full text-gray-900 w-full">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-16">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <x-tweet :tweet="$tweet" />
+
+            <x-divider />
+
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <form method="POST" action="{{ route('tweet.retweet', $tweet) }}">
                         @csrf
@@ -22,8 +20,6 @@
                     </form>
                 </div>
             </div>
-
-
         </div>
     </div>
-</x-app-layout>
+</main>

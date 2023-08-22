@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -46,7 +45,8 @@ class TweetController extends Controller
             }
         }
 
-        return view('dashboard', [ 'tweets' => $tweets ]);
+        // return view('dashboard', [ 'tweets' => $tweets, 'hashtags' => $hashtags ]);
+        return $this->renderView('tweet.main', [ 'tweets' => $tweets ]);
     }
 
     /**
@@ -58,7 +58,8 @@ class TweetController extends Controller
     {
         $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->following->pluck('id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
 
-        return view('followed', [ 'tweets' => $tweets ]);
+        // return view('followed', [ 'tweets' => $tweets, 'hashtags' => $hashtags ]);
+        return $this->renderView('tweet.followed', [ 'tweets' => $tweets ]);
     }
 
     /**
@@ -105,7 +106,8 @@ class TweetController extends Controller
 
         $tweet->save();
 
-        return Redirect::route('tweets.dashboard');
+        // return Redirect::route('tweets.dashboard');
+        return back();
     }
 
     /**
@@ -161,7 +163,8 @@ class TweetController extends Controller
 
         $tweetComment->save();
 
-        return Redirect::route('tweet.comments', $tweet->uuid);
+        // return Redirect::route('tweet.comments', $tweet->uuid);
+        return back();
     }
 
     /**
@@ -174,12 +177,10 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->first();
 
-        foreach ($tweets as $tweet)
-        {
-            $tweet->tweet = $this->hashtag_links($tweet->tweet);
-        }
+        $tweet->tweet = $this->hashtag_links($tweet->tweet);
 
-        return view('tweet/retweet', [ 'tweet' => $tweet ]);
+        // return view('retweet', [ 'tweet' => $tweet, 'hashtags' => $hashtags ]);
+        return $this->renderView('tweet.retweet', [ 'tweet' => $tweet ]);
     }
 
     /**
@@ -213,7 +214,8 @@ class TweetController extends Controller
 
         $tweetRetweet->save();
 
-        return Redirect::route('tweets.dashboard');
+        // return Redirect::route('tweets.dashboard');
+        return back();
     }
 
     /**
@@ -245,10 +247,7 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->first();
 
-        foreach ($tweets as $tweet)
-        {
-            $tweet->tweet = $this->hashtag_links($tweet->tweet);
-        }
+        $tweet->tweet = $this->hashtag_links($tweet->tweet);
 
         $comments = Tweet::where('comments', $request->uuid)->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
@@ -259,6 +258,6 @@ class TweetController extends Controller
             $tweet->tweet = $this->hashtag_links($tweet->tweet);
         }
 
-        return view('tweet/comments', [ 'tweet' => $tweet, 'comments' => $comments ]);
+        return $this->renderView('tweet.comments', [ 'tweet' => $tweet, 'comments' => $comments ]);
     }
 }
