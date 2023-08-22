@@ -100,7 +100,8 @@ class Controller extends BaseController
      */
     public function rightbar()
     {
-        $rightbar = Tweet::where('created_at', '>=', now()->subHours(24))
+        $rightbar = Tweet::where('comments', null)
+            ->where('created_at', '>=', now()->subHours(24))
             ->where('tweet', 'like', '%#%')
             ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
