@@ -50,19 +50,6 @@ class TweetController extends Controller
     }
 
     /**
-     * Display a listing followed of the resource.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function dashboardFollowed(): View
-    {
-        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->following->pluck('id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
-
-        // return view('followed', [ 'tweets' => $tweets, 'hashtags' => $hashtags ]);
-        return $this->renderView('tweet.followed', [ 'tweets' => $tweets ]);
-    }
-
-    /**
      * Store a newsly created tweet in storage.
      *
      * @param  \Illuminate\Http\Request  $request

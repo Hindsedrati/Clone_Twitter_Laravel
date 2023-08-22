@@ -17,6 +17,18 @@ use App\Models\User;
 
 class UserFollowController extends Controller
 {
+    /**
+     * Display a listing followed of the resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function dashboardFollowed(): View
+    {
+        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->following->pluck('id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
+
+        return $this->renderView('tweet.followed', [ 'tweets' => $tweets ]);
+    }
+
     public function store(User $user)
     {
         if (Auth::guard('user')->user()->id === $user->id) {
