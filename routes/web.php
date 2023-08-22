@@ -65,7 +65,7 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::post('/tweet/{tweet}/likes', [TweetLikeController::class, 'addTweetLikes'])-> name('tweet.likes');
         Route::delete('/tweet/{tweet}/likes', [TweetLikeController::class, 'destroyTweetLikes'])-> name('tweet.likes');
 
-        Route::get('/follow', [TweetController::class, 'dashboardFollowed'])->name('tweets.followed');
+        Route::get('/follow', [UserFollowController::class, 'dashboardFollowed'])->name('tweets.followed');
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
     });
