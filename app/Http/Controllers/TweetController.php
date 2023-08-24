@@ -8,10 +8,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 use App\Models\Analytic;
+use App\Models\File;
 use App\Models\Follow;
 use App\Models\Like;
 use App\Models\User;
@@ -70,34 +72,36 @@ class TweetController extends Controller
 
         $file = null;
         $extension = null;
-        $fileName = null;
         $path = '';
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $request->validate([ 'file' => 'required|mimes:jpg,jpeg,png,mp4' ]);
-            $extension = $file->getClientOriginalExtension();
-            $fileName = time() . '.' . $extension;
-            $extension === 'mp4' ? $path = '/videos/' : $path = '/pics/';
-        }
 
         $tweet = new Tweet;
 
         $tweet->uuid = Str::ulid();
         $tweet->user_id = Auth::guard('user')->user()->id;
         $tweet->handle = '';
-        $tweet->image = '';
         $tweet->tweet = $request->input('tweet');
-        if ($fileName) {
-            $tweet->file = $path . $fileName;
-            $tweet->is_video = $extension === 'mp4' ? true : false;
-            $file->move(public_path() . $path, $fileName);
-        }
 
         $tweet->save();
 
-        // return Redirect::route('tweets.dashboard');
-        return back();
+        if(!empty($request->input('files')))
+        {
+            foreach ($request->input('files') as $key => $file) {
+                if(!empty($file))
+                {
+                    $newpath = Storage::move('tmp/'.$file, 'public/uploads/'.$file);
+
+                    $newfile = new File;
+                    $newfile->user_id = auth()->user()->id;
+                    $newfile->tweet_uuid = $tweet->uuid;
+                    $newfile->path = $file;
+
+                    $newfile->save();
+                }
+            }
+        }
+
+        // return Redirect::route('tweet.dashboard');
+        return redirect()->back();
     }
 
     /**
@@ -126,32 +130,34 @@ class TweetController extends Controller
 
         $file = null;
         $extension = null;
-        $fileName = null;
         $path = '';
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $request->validate([ 'file' => 'required|mimes:jpg,jpeg,png,mp4' ]);
-            $extension = $file->getClientOriginalExtension();
-            $fileName = time() . '.' . $extension;
-            $extension === 'mp4' ? $path = '/videos/' : $path = '/pics/';
-        }
 
         $tweetComment = new Tweet;
 
         $tweetComment->uuid = Str::ulid();
         $tweetComment->user_id = Auth::guard('user')->user()->id;
         $tweetComment->handle = '';
-        $tweetComment->image = '';
         $tweetComment->tweet = $request->input('tweet');
-        if ($fileName) {
-            $tweetComment->file = $path . $fileName;
-            $tweetComment->is_video = $extension === 'mp4' ? true : false;
-            $file->move(public_path() . $path, $fileName);
-        }
         $tweetComment->comments = $tweet->uuid;
 
         $tweetComment->save();
+
+        if(!empty($request->input('files')))
+        {
+            foreach ($request->input('files') as $key => $file) {
+                if(!empty($file))
+                {
+                    $newpath = Storage::move('tmp/'.$file, 'public/uploads/'.$file);
+
+                    $newfile = new File;
+                    $newfile->user_id = auth()->user()->id;
+                    $newfile->tweet_uuid = $tweetComment->uuid;
+                    $newfile->path = $file;
+
+                    $newfile->save();
+                }
+            }
+        }
 
         // return Redirect::route('tweet.comments', $tweet->uuid);
         return back();
@@ -189,7 +195,6 @@ class TweetController extends Controller
 
         $file = null;
         $extension = null;
-        $fileName = null;
         $path = '';
 
         $tweetRetweet = new Tweet;
@@ -197,14 +202,30 @@ class TweetController extends Controller
         $tweetRetweet->uuid = Str::ulid();
         $tweetRetweet->user_id = Auth::guard('user')->user()->id;
         $tweetRetweet->handle = '';
-        $tweetRetweet->image = '';
         $tweetRetweet->tweet = $request->tweet;
 
         $tweetRetweet->Retweets = $tweet->uuid;
 
         $tweetRetweet->save();
 
-        // return Redirect::route('tweets.dashboard');
+        if(!empty($request->input('files')))
+        {
+            foreach ($request->input('files') as $key => $file) {
+                if(!empty($file))
+                {
+                    $newpath = Storage::move('tmp/'.$file, 'public/uploads/'.$file);
+
+                    $newfile = new File;
+                    $newfile->user_id = auth()->user()->id;
+                    $newfile->tweet_uuid = $tweet->uuid;
+                    $newfile->path = $file;
+
+                    $newfile->save();
+                }
+            }
+        }
+
+        // return Redirect::route('tweet.dashboard');
         return back();
     }
 
@@ -220,11 +241,13 @@ class TweetController extends Controller
 
         if ($tweet->comment) {
             if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
-                if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
-                    unlink(public_path() . $tweet->file);
+                if ($tweet->files) {
+                    foreach ($tweet->files as $key => $file) {
+                        Storage::delete('public/uploads/'.$file->path);
+                    }
                 }
-    
-                $tweet->tweet = 'Ce tweet a été supprimé par son auteur';
+
+                $tweet->tweet = 'Ce tweet a été masqué.';
                 $tweet->save();
                 
                 return back();
@@ -232,13 +255,15 @@ class TweetController extends Controller
         }
 
         if (Auth::guard('user')->user()->id === $tweet->user_id) {
-            if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
-                unlink(public_path() . $tweet->file);
+            if ($tweet->files) {
+                foreach ($tweet->files as $key => $file) {
+                    Storage::delete('public/uploads/'.$file->path);
+                }
             }
 
             $tweet->delete();
 
-            return back();
+            return redirect()->route('tweet.dashboard');
         }
 
         abort(403);
@@ -263,8 +288,10 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
 
-        if (!is_null($tweet->file) && file_exists(public_path() . $tweet->file)) {
-            unlink(public_path() . $tweet->file);
+        if ($tweet->files) {
+            foreach ($tweet->files as $key => $file) {
+                Storage::delete('public/uploads/'.$file->path);
+            }
         }
 
         $tweet->tweet = 'Ce tweet a été supprimé par un modérateur';
@@ -281,17 +308,17 @@ class TweetController extends Controller
      */
     public function tweetCommentsView(Request $request): View
     {
-        $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
+        $tweet = Tweet::query()->where('uuid', $request->uuid)->firstOrFail();
 
         $tweet->tweet = $this->hashtag_links($tweet->tweet);
 
-        $comments = Tweet::where('comments', $request->uuid)->with(['user', 'Likes'])
+        $comments = Tweet::query()->where('comments', $request->uuid)->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         
-        foreach ($comments as $tweet)
+        foreach($comments as $comment)
         {
-            $tweet->tweet = $this->hashtag_links($tweet->tweet);
+            $comment->tweet = $this->hashtag_links($comment->tweet);
         }
 
         return $this->renderView('tweet.comments', [ 'tweet' => $tweet, 'comments' => $comments ]);

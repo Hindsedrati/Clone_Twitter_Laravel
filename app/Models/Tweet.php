@@ -10,6 +10,15 @@ class Tweet extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'uuid',
+    ];
+
+    /**
      * Get the user associated with the twwet.
      */
     public function user()
@@ -44,6 +53,11 @@ class Tweet extends Model
 
     public function Analytics()
     {
-    return $this->hasMany(Analytic::class, 'tweet_uuid', 'uuid');
+        return $this->hasMany(Analytic::class, 'tweet_uuid', 'uuid');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'tweet_uuid', 'uuid');
     }
 }

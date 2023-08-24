@@ -29,6 +29,16 @@
                             </form>
                         @endif
 
+                        @if($tweet->comment)
+                            @if(auth()->user()->id == $tweet->comment->user_id)
+                                <form action="{{ route('tweet.delete', $tweet->uuid) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" value="Masquer" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
+                                </form>
+                            @endif
+                        @endif
+
                         @if(in_array(auth()->user()->role_id, [2,3]))
                             <form action="{{ route('modo.tweet.delete', $tweet->uuid) }}" method="post">
                                 @csrf
@@ -43,6 +53,14 @@
         </div>
 
         <div class="flex mb-4 mt-2">{!! $tweet->tweet !!}</div>
+
+        @if($tweet->files)
+            <div class="flex mx-6">
+                @foreach($tweet->files as $file)
+                    <img src="{{ asset('storage/uploads/' . $file->path) }}" alt="image" class="mb-4">
+                @endforeach
+            </div>
+        @endif
 
         @if($tweet->retweet)
             <x-divider />

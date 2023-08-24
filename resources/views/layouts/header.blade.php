@@ -1,6 +1,6 @@
 <header class="fixed p-4 top-0">
     <div class="flex">
-        <a href="{{ route('tweets.dashboard') }}" class="text-2xl font-bold text-gray-800 dark:text-white lg:text-3xl hover:text-gray-700 dark:hover:text-gray-300">Twitter</a>
+        <a href="{{ route('tweet.dashboard') }}" class="text-2xl font-bold text-gray-800 dark:text-white lg:text-3xl hover:text-gray-700 dark:hover:text-gray-300">Twitter</a>
     </div>
     <div class="flex">
         @if(!Auth::id())
