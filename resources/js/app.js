@@ -16,12 +16,14 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-const inputElement = document.querySelector('input[type="file"].filepond');
- 
+const inputElementTweet = document.querySelector('input[type="file"].filepond--tweet');
+const inputElementProfile = document.querySelector('input[type="file"].filepond--profile');
+const inputElementBanner = document.querySelector('input[type="file"].filepond--banner');
+
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
- 
+
 FilePond.registerPlugin(FilePondPluginImagePreview);
-FilePond.create(inputElement).setOptions({
+FilePond.create(inputElementTweet).setOptions({
     server: {
         process: '/uploads/process',
         fetch: null,
@@ -32,4 +34,28 @@ FilePond.create(inputElement).setOptions({
     },
     allowMultiple: true,
     acceptedFileTypes: ["image/*", "video/*"],
+});
+FilePond.create(inputElementProfile).setOptions({
+    server: {
+        process: '/uploads/process',
+        fetch: null,
+        revert: null,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    },
+    allowMultiple: false,
+    acceptedFileTypes: ["image/*"],
+});
+FilePond.create(inputElementBanner).setOptions({
+    server: {
+        process: '/uploads/process',
+        fetch: null,
+        revert: null,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    },
+    allowMultiple: false,
+    acceptedFileTypes: ["image/*"],
 });

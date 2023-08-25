@@ -33,6 +33,8 @@
                             @include($view, [ 'tweet' => $tweet ])
                         @elseif($view == 'user.profile')
                             @include($view, [ 'profile' => $profile, 'tweets' => $tweets ])
+                        @elseif($view == 'profile.edit')
+                            @include($view, [ 'user' => $user ])
                         @else
                             @include($view, [ 'tweets' => $tweets ])
                         @endif

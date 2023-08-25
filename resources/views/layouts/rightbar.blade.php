@@ -5,7 +5,7 @@
 
         <x-divider />
 
-        <div class="border-gray-900 flex h-full pb-3 text-gray-400 text-xl w-full">
+        <div class="flex h-full pb-3 text-gray-400 text-xl w-full">
             <div class="">
                 @foreach($rightbar["hashtags"] as $hashtag)
                     <div class="flex">

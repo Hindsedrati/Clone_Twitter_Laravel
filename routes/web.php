@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ExplorerController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\TweetLikeController;
 use App\Http\Controllers\UserController;
@@ -51,9 +52,13 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     // Route::group(['middleware' => 'checkRole:user', 'middleware' => 'checkRole:modo', 'middleware' => 'checkRole:admin'], function() {
     Route::group(['middleware' => 'checkRole:user,modo,admin'], function() {
 
-        // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('/profile/password/update', [PasswordController::class, 'update'])->name('profile.password.update');
+        Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        Route::post('/profile/updateProfilePicture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
+        Route::post('/profile/updateProfileBanner', [ProfileController::class, 'updateProfileBanner'])->name('profile.update.banner');
 
         Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

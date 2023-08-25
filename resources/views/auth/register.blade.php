@@ -3,22 +3,22 @@
         @csrf
 
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-            <!-- Username -->
-            <div class="">
-                <label for="username" class="block text-sm font-medium leading-6 text-gray-300">Username</label>
-                <div class="mt-2">
-                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required max="60" autocomplete="username" />
-                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                </div>
-            </div>
             <!-- Name -->
             <div class="">
                 <label for="name" class="block text-sm font-medium leading-6 text-gray-300">Name</label>
                 <div class="mt-2">
+                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required minlength="3" maxlength="20" autocomplete="name" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
+            </div>
+            <!-- Username -->
+            <div class="">
+                <label for="username" class="block text-sm font-medium leading-6 text-gray-300">Username</label>
+                <div class="mt-2">
                     <div class="block border-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 dark:text-gray-300 flex focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-inset focus:border-indigo-500 focus:ring-indigo-500 ring-1 ring-gray-600 ring-inset rounded-md shadow-sm sm:max-w-md w-full">
                         <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">@</span>
-                        <input type="text" name="name" id="name" autocomplete="name" class="bg-transparent block border-0 flex-1 focus:ring-0 pl-1 placeholder:text-gray-400 py-1.5 sm:leading-6 sm:text-sm text-gray-300">
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        <input type="text" name="username" id="username" autocomplete="username" minlength="3" maxlength="35" class="bg-transparent block border-0 flex-1 focus:ring-0 pl-1 placeholder:text-gray-400 py-1.5 sm:leading-6 sm:text-sm text-gray-300">
+                        <x-input-error :messages="$errors->get('username')" class="mt-2" />
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required max="255" autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required max="255" autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 

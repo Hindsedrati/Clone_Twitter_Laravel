@@ -2,13 +2,23 @@
 
 <div class="dark:bg-gray-800 sm:rounded-lg">
     <div class="dark:text-gray-100 p-6 text-gray-900">
-        <div class="flex justify-between">
-            <div class="">
+        <div class="flex justify-between relative">
+            <!-- <div class="">
                 <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+            </div> -->
+            <div class="flex">
+                <img src="{{ asset('storage/profiles/' . $tweet->user->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
+                <div class="ml-4 flex-auto">
+                    <div class="font-medium">
+                        <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a>  - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+                    </div>
+                    <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $tweet->user->name }}</div>
+                </div>
             </div>
 
             @auth
-                <button class="dropdown:block relative font-medium px-2 py-1 rounded-md text-xs" style="--tw-ring-color: #270000; --tw-ring-inset: inset; --tw-text-opacity: 1; color: rgb(185 28 28 / var(--tw-text-opacity)); --tw-bg-opacity: 1; background-color: #270000;" role="navigation" aria-haspopup="true">
+                <!-- DropDown -->
+                <button class="absolute dropdown:block px-2 py-1 right-0 rounded-md text-xs top-0" style="--tw-ring-color: #270000; --tw-ring-inset: inset; --tw-text-opacity: 1; color: rgb(185 28 28 / var(--tw-text-opacity)); --tw-bg-opacity: 1; background-color: #270000;" role="navigation" aria-haspopup="true">
                     <div class="flex items-center">
                         <span class="px-2 text-gray-700">...</span>
                     </div>
