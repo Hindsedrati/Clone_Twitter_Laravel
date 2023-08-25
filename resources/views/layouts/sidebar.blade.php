@@ -1,5 +1,17 @@
 <nav class="mx-auto">
-    <div class="px-6" style="position: -webkit-sticky; position: sticky; top: 90px;">
-        <div class="w-full h-full flex justify-center text-gray-400 text-xl border-4 border-gray-900 border-dashed">Sidebar</div>
+    <div class="bg-white dark:bg-gray-800 px-6 rounded-lg" style="position: -webkit-sticky; position: sticky; top: 90px;">
+        <div class="flex flex-col h-full items-center pb-3 text-xl w-full">
+            <img src="{{ asset('storage/profiles/' . auth()->user()->picture_path) }}" alt="" class="flex-none h-8 mt-4 rounded-full w-8">
+
+            <a href="{{ route('tweet.dashboard') }}" class="p-2 mt-1 text-left text-white text-sm">Home</a>
+            <a href="{{ route('tweet.followed') }}" class="p-2 text-left text-white text-sm">Follow</a>
+
+            @auth
+                <x-divider />
+                
+                <a href="{{ route('user.profile', auth()->user()->name ) }}" class="p-2 text-left text-white text-sm">My Profile</a>
+                <a href="{{ route('profile.edit') }}" class="p-2 text-left text-white text-sm">Setting</a>
+            @endauth
+        </div>
     </div>
 </nav>

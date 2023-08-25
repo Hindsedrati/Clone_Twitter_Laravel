@@ -1,9 +1,23 @@
 <main class="">
     <div class="flex w-full mx-auto px-6 py-8">
-        <div class="border-4 border-dashed border-gray-900 h-full text-gray-900 w-full">
+        <div class="border-gray-900 h-full text-gray-900 w-full">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow rounded-lg">
                 <div class="max-w-xl">
-                    <b>{{ $profile->username }}</b> <span class="text-muted">{{'@'}}{{ $profile->name }}</span>
+                    <!-- <b>{{ $profile->username }}</b> <span class="text-muted">{{'@'}}{{ $profile->name }}</span> -->
+                    <div class="flex items-center justify-between">
+                        <img src="{{ asset('storage/profiles/' . $profile->banner_path) }}"
+                            class="h-auto max-w-full mb-6 rounded-lg"
+                            alt="banner" />
+                    </div>
+                    <div class="flex">
+                        <img src="{{ asset('storage/profiles/' . $profile->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
+                        <div class="ml-4 flex-auto">
+                            <div class="font-medium">
+                                <b>{{ $profile->username }}</b>
+                            </div>
+                            <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $profile->name }}</div>
+                        </div>
+                    </div>
 
                     <div class="flex mt-2">
                         <div class="flex">
