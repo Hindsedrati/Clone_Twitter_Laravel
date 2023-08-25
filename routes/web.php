@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ExplorerController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\TweetLikeController;
 use App\Http\Controllers\UserController;
@@ -22,7 +23,7 @@ use App\Http\Controllers\UserFollowController;
 */
 
 // Route::get('/', function () { return view('welcome'); });
-Route::get('/', [TweetController::class, 'dashboard'])->name('tweets.dashboard');
+Route::get('/', [TweetController::class, 'dashboard'])->name('tweet.dashboard');
 
 Route::get('/profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
 Route::get('/tweet/{uuid}/comments', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
@@ -69,11 +70,13 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
 
         Route::delete('/tweet/{uuid}/delete', [TweetController::class, 'tweetDestroy'])->name('tweet.delete');
 
-        Route::get('/follow', [UserFollowController::class, 'dashboardFollowed'])->name('tweets.followed');
+        Route::get('/follow', [UserFollowController::class, 'dashboardFollowed'])->name('tweet.followed');
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
     
         Route::post('/tweet/{tweet}/signale', [TweetController::class, 'addTweetSignale'])->name('tweet.signale');
+
+        Route::post('/uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
     });
 
     /*

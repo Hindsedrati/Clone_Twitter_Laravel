@@ -65,7 +65,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return Redirect::route('tweets.dashboard');
+        return Redirect::route('tweet.dashboard');
     }
 
     /**
@@ -103,7 +103,7 @@ class UserController extends Controller
             ]);
         }
 
-        return Redirect::route('tweets.dashboard')->with(['token' => $token]);
+        return Redirect::route('tweet.dashboard')->with(['token' => $token]);
     }
 
     /**
@@ -119,7 +119,7 @@ class UserController extends Controller
 
         $request->session()->regenerateToken();
 
-        return Redirect::route('tweets.dashboard');
+        return Redirect::route('tweet.dashboard');
     }
 
     /**
