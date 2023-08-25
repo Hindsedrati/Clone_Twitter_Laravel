@@ -1,6 +1,6 @@
 <main class="">
     <div class="flex w-full mx-auto px-6 py-8">
-        <div class="border-4 border-dashed border-gray-900 h-full text-gray-900 w-full">
+        <div class="border-gray-900 h-full text-gray-900 w-full">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow rounded-lg">
                 <div class="max-w-xl">
                     <b>{{ $profile->username }}</b> <span class="text-muted">{{'@'}}{{ $profile->name }}</span>
