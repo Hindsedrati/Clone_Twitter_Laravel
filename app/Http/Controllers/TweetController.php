@@ -63,7 +63,7 @@ class TweetController extends Controller
     public function addTweet(Request $request): RedirectResponse
     {
         $request->validate([
-            'tweet' => 'required|string|max:144',
+            'tweet' => [ 'required', 'string', 'max:144']
         ], [
             'tweet.required' => 'Veuillez entrer votre tweet',
             'tweet.string' => 'Veuillez entrer une valeur valide',
