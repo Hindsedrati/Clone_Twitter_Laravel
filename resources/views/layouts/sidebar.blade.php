@@ -13,15 +13,13 @@
                 
                 <a href="{{ route('user.profile', auth()->user()->name ) }}" class="p-2 text-left text-white text-sm">My Profile</a>
                 <a href="{{ route('profile.edit') }}" class="p-2 text-left text-white text-sm">Setting</a>
-            @endauth
 
-            @if(auth()->user()->role_id == 3)
-                <x-divider />
+                @if(auth()->user()->role_id == 3)
+                    <x-divider />
 
-                <a href="" class="p-2 text-left text-white text-sm">Admin</a>
-            @endif
+                    <a href="" class="p-2 text-left text-white text-sm">Admin</a>
+                @endif
 
-            @auth
                 <x-divider />
 
                 <a href="{{ route('logout') }}" class="p-2 text-left text-white text-sm">Logout</a>
