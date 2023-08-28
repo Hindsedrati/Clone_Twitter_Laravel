@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+use App\Notifications\RealTimeNotification;
+
 use App\Models\Analytic;
 use App\Models\File;
 use App\Models\Follow;
@@ -100,7 +102,20 @@ class TweetController extends Controller
             }
         }
 
-        // return Redirect::route('tweet.dashboard');
+        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
+
+        foreach ($follows as $follow)
+        {
+            $user = User::where('id', $follow->follower_user_id)->first();
+
+            $user->notify(
+                new RealTimeNotification(
+                    'Nouveau tweet de @'.Auth::guard('user')->user()->name.' !',
+                    route('tweet.comments', $tweet->uuid)
+                )
+            );
+        }
+
         return redirect()->back();
     }
 
@@ -121,7 +136,7 @@ class TweetController extends Controller
         }
 
         $request->validate([
-            'tweet' => 'required|string|max:144',
+            'tweet' => 'required|string|min:3|max:144',
         ], [
             'tweet.required' => 'Veuillez entrer votre tweet',
             'tweet.string' => 'Veuillez entrer une valeur valide',
@@ -157,6 +172,20 @@ class TweetController extends Controller
                     $newfile->save();
                 }
             }
+        }
+
+        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
+
+        foreach ($follows as $follow)
+        {
+            $user = User::where('id', $follow->follower_user_id)->first();
+
+            $user->notify(
+                new RealTimeNotification(
+                    'Nouveau commentaire de @'.Auth::guard('user')->user()->name.' !',
+                    route('tweet.comments', $tweet->uuid)
+                )
+            );
         }
 
         // return Redirect::route('tweet.comments', $tweet->uuid);
@@ -223,6 +252,20 @@ class TweetController extends Controller
                     $newfile->save();
                 }
             }
+        }
+
+        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
+
+        foreach ($follows as $follow)
+        {
+            $user = User::where('id', $follow->follower_user_id)->first();
+
+            $user->notify(
+                new RealTimeNotification(
+                    '@'.Auth::guard('user')->user()->name.' a retweeté le message de @'.$tweet->user->name.' !',
+                    route('tweet.retweet', $tweet->uuid)
+                )
+            );
         }
 
         // return Redirect::route('tweet.dashboard');

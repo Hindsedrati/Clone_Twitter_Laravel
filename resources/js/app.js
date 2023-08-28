@@ -1,6 +1,18 @@
 import './bootstrap';
 
-// FilePond
+/**************************
+ *        Alpine JS      *
+ * ***********************/
+///// Import Alpine JS
+/* */ import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
+
+/**************************
+ *         FilePond       *
+ **************************/
 /* */ //Import the plugin code
 /* */ import * as FilePond from 'filepond';
 /* */ // Import the plugin styles
@@ -9,12 +21,6 @@ import './bootstrap';
 /* */ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 /* */ // Import the Image Preview plugin styles
 /* */ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-// Import Alpine JS
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
 
 const inputElementTweet = document.querySelector('input[type="file"].filepond--tweet');
 const inputElementProfile = document.querySelector('input[type="file"].filepond--profile');
@@ -58,4 +64,25 @@ FilePond.create(inputElementBanner).setOptions({
     },
     allowMultiple: false,
     acceptedFileTypes: ["image/*"],
+});
+
+/**************************
+ *        Pusher        *
+ * ***********************/
+///// Import Pusher
+/* */ import Pusher from 'pusher-js';
+/* */ import Echo from 'laravel-echo';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    wsHost: import.meta.env.VITE_PUSHER_HOST,
+    wsPort: import.meta.env.VITE_PUSHER_PORT,
+    // wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
+    forceTLS: false,
+    // enabledTransports: ['ws', 'wss'],
+    disableStats: true,
 });

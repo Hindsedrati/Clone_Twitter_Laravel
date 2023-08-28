@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+use App\Notifications\RealTimeNotification;
+
 use App\Models\User;
 use App\Models\Tweet;
 
@@ -134,11 +136,15 @@ class UserController extends Controller
      * 
      * @return View user/profile
      */
-    public function userProfileView(Request $request): View
+    // public function userProfileView(Request $request): View
+    public function userProfileView(User $user): View
     {
-        $profile = User::where('name', $request->name)->firstOrFail();
+        if(!isset($user))
+        {
+            abort(404);
+        }
 
-        $tweets = $profile->tweets()
+        $tweets = $user->tweets()
             ->orderBy('id', 'desc')
             ->paginate(10);
         
@@ -147,6 +153,40 @@ class UserController extends Controller
             $tweet->tweet = $this->hashtag_links($tweet->tweet);
         }
 
-        return $this->renderView('user.profile', [ 'profile' => $profile, 'tweets' => $tweets, ]);
+        return $this->renderView('user.profile', [ 'profile' => $user, 'tweets' => $tweets, ]);
+    }
+
+    /**
+     * Display page followed
+     * 
+     * @return View user/followers
+     */
+    public function userFollowersView(User $user): View
+    {
+        if(!isset($user))
+        {
+            abort(404);
+        }
+
+        $followers = $user->followers()->paginate(10);
+
+        return $this->renderView('user.followers', [ 'profile' => $user, 'followers' => $followers ]);
+    }
+
+    /**
+     * Display page followed
+     * 
+     * @return View user/followed
+     */
+    public function userFollowedView(User $user): View
+    {
+        if(!isset($user))
+        {
+            abort(404);
+        }
+
+        $followed = $user->followed()->paginate(10);
+
+        return $this->renderView('user.followed', [ 'profile' => $user, 'followed' => $followed ]);
     }
 }
