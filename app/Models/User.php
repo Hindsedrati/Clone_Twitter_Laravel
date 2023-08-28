@@ -62,13 +62,13 @@ class User extends Authenticatable
         return $this->hasManyThrough(Like::class, Tweet::class, 'user_id', 'tweet_uuid', 'id', 'uuid');
     }
 
-    public function following()
-    {
-        return $this->belongsToMany(User::class, 'follows', 'follower_user_id', 'followed_user_id');
-    }
-
     public function followers()
     {
-        return $this->belongsToMany(User::class, 'follows', 'followed_user_id', 'follower_user_id');
+        return $this->hasMany(Follow::class, 'followed_user_id');
+    }
+
+    public function followed()
+    {
+        return $this->hasMany(Follow::class, 'follower_user_id');
     }
 }

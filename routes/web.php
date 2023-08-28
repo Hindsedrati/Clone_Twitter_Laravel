@@ -26,7 +26,11 @@ use App\Http\Controllers\UserFollowController;
 // Route::get('/', function () { return view('welcome'); });
 Route::get('/', [TweetController::class, 'dashboard'])->name('tweet.dashboard');
 
-Route::get('/profile/{name}', [UserController::class, 'userProfileView'])->name('user.profile');
+Route::get('/profile/{user:name}', [UserController::class, 'userProfileView'])->name('user.profile');
+
+Route::get('/profile/{user:name}/followers', [UserController::class, 'userFollowersView'])->name('user.profile.followers');
+Route::get('/profile/{user:name}/followed', [UserController::class, 'userFollowedView'])->name('user.profile.followed');
+
 Route::get('/tweet/{uuid}/comments', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
 
 Route::get('/explorer/{string}', [ExplorerController::class, 'explorerView'])->name('tweet.explorer');
@@ -82,6 +86,8 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::post('/tweet/{tweet}/signale', [TweetController::class, 'addTweetSignale'])->name('tweet.signale');
 
         Route::post('/uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
+
+        Route::get('/notify', [UserController::class, 'testNoti']);
     });
 
     /*
@@ -100,9 +106,9 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     | Admin Routes
     |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     */
-    // Route::group(['prefix' => 'admin', 'middleware' => 'checkRole:admin'], function() {
-
-    // });
+    Route::group(['prefix' => 'admin', 'middleware' => 'checkRole:admin'], function() {
+        Route::get('/laravel-websockets');
+    });
 });
 
 

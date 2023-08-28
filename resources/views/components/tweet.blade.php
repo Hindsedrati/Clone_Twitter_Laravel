@@ -28,10 +28,10 @@
                             @csrf
                             <input type="submit" value="Signaler" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
                         </form>
-
-                        <x-divider />
-
+                        
                         @if(auth()->user()->id == $tweet->user_id)
+                            <x-divider />
+
                             <form action="{{ route('tweet.delete', $tweet->uuid) }}" method="post">
                                 @csrf
                                 @method('DELETE')
