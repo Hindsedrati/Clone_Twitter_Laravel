@@ -4,15 +4,15 @@
     <div class="dark:text-gray-100 p-6 text-gray-900">
         <div class="flex justify-between relative">
             <!-- <div class="">
-                <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+                <a href="{{ route('user.profile', $tweet->user->username) }}"><b>{{ $tweet->user->name }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
             </div> -->
             <div class="flex">
                 <img src="{{ asset('storage/profiles/' . $tweet->user->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
                 <div class="ml-4 flex-auto">
                     <div class="font-medium">
-                        <a href="{{ route('user.profile', $tweet->user->name) }}"><b>{{ $tweet->user->username }}</b></a>  - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
+                        <a href="{{ route('user.profile', $tweet->user->username) }}"><b>{{ $tweet->user->name }}</b></a>  - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
                     </div>
-                    <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $tweet->user->name }}</div>
+                    <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $tweet->user->username }}</div>
                 </div>
             </div>
 
@@ -24,7 +24,7 @@
                     </div>
                     <ul class="absolute left-0 hidden w-auto p-2 mt-3 space-y-2 text-sm bg-white border border-gray-100 rounded-lg shadow-lg" aria-label="submenu">
 
-                        <form action="{{ route('tweet.signale', $tweet->uuid) }}" method="post">
+                        <form action="{{ route('tweet.report', $tweet) }}" method="post">
                             @csrf
                             <input type="submit" value="Signaler" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
                         </form>
@@ -39,7 +39,7 @@
                             </form>
                         @endif
 
-                        @if($tweet->comment)
+                        <!-- @if($tweet->comment)
                             @if(auth()->user()->id == $tweet->comment->user_id)
                                 <form action="{{ route('tweet.delete', $tweet->uuid) }}" method="post">
                                     @csrf
@@ -47,7 +47,7 @@
                                     <input type="submit" value="Masquer" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
                                 </form>
                             @endif
-                        @endif
+                        @endif -->
 
                         @if(in_array(auth()->user()->role_id, [2,3]))
                             <form action="{{ route('modo.tweet.delete', $tweet->uuid) }}" method="post">
@@ -62,7 +62,11 @@
             @endauth
         </div>
 
-        <div class="flex mb-4 mt-2">{!! $tweet->tweet !!}</div>
+        @if ($tweet->trashed())
+            <div class="flex mb-4 mt-2">Ce tweet a été masqué.</div>
+        @else
+            <div class="flex mb-4 mt-2">{!! $tweet->tweet !!}</div>
+        @endif
 
         @if($tweet->files)
             <div class="flex mx-6">
