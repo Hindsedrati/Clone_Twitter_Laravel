@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\WordController;
 
 use App\Http\Controllers\ExplorerController;
 use App\Http\Controllers\FileUploadController;
@@ -118,7 +119,14 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
 
         Route::get('/list/users', [AdminController::class, 'listUsers'])->name('admin.list.users');
         Route::get('/list/reports', [AdminController::class, 'listReports'])->name('admin.list.reports');
-        Route::get('/list/words', [AdminController::class, 'blackListWords'])->name('admin.list.words');
+        
+        Route::get('/list/words', [WordController::class, 'blackListWords'])->name('admin.list.words');
+        Route::get('/list/words/add', [WordController::class, 'wordAddView'])->name('admin.word.add');
+        Route::post('/list/words/add', [WordController::class, 'wordAdd'])->name('admin.word.add');
+
+        Route::get('/list/words/{word}', [WordController::class, 'wordEditView'])->name('admin.word.edit');
+        Route::post('/list/words/{word}/edit', [WordController::class, 'wordUpdate'])->name('admin.word.update');
+        Route::delete('/list/words/{word}/delete', [WordController::class, 'wordDelete'])->name('admin.word.delete');
 
         Route::post('/list/reports/{report}/check', [AdminController::class, 'reportCheck'])->name('admin.report.check');
         Route::delete('/list/reports/{report}/delete', [AdminController::class, 'reportDelete'])->name('admin.report.delete');

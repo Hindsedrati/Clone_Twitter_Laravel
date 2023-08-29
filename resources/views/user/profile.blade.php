@@ -40,9 +40,10 @@
                 
                 @auth
                 
-                <div class="max-w-xl text-right">
-                    @if(auth()->id() !== $profile->id)
-                        <x-divider />
+                    <div class="max-w-xl text-right">
+                        @if(auth()->id() !== $profile->id)
+                            <x-divider />
+
                             @if(in_array(auth()->user()->id, $profile->followed->pluck('followed_user_id')->toArray()))
                                 <form method="POST" action="{{ route('user.follow', $profile) }}">
                                     @csrf

@@ -13,9 +13,9 @@ use Illuminate\View\View;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Nword;
 use App\Models\Report;
 use App\Models\User;
+use App\Models\Word;
 
 class AdminController extends Controller
 {
@@ -60,12 +60,5 @@ class AdminController extends Controller
         $report->tweet->delete();
 
         return redirect()->back();
-    }
-
-    public function blackListWords()
-    {
-        $nwords = Word::all();
-
-        return $this->renderAdminView('admin.listNwords', [ 'nwords' => $nwords ]);
     }
 }
