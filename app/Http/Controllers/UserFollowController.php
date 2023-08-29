@@ -54,8 +54,8 @@ class UserFollowController extends Controller
 
         $user->notify(
             new RealTimeNotification(
-                '@'.Auth::guard('user')->user()->name.' vous a follow !',
-                route('user.profile', ['user' => Auth::guard('user')->user()->name])
+                '@'.Auth::guard('user')->user()->username.' vous a follow !',
+                route('user.profile', ['user' => Auth::guard('user')->user()->username])
             )
         );
 
@@ -78,8 +78,8 @@ class UserFollowController extends Controller
 
         $user->notify(
             new RealTimeNotification(
-                '@'.Auth::guard('user')->user()->name.' vous a unfollow !',
-                route('user.profile', ['user' => Auth::guard('user')->user()->name])
+                '@'.Auth::guard('user')->user()->username.' vous a unfollow !',
+                route('user.profile', ['user' => Auth::guard('user')->user()->username])
             )
         );
 

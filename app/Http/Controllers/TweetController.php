@@ -18,8 +18,9 @@ use App\Models\Analytic;
 use App\Models\File;
 use App\Models\Follow;
 use App\Models\Like;
-use App\Models\User;
+use App\Models\Report;
 use App\Models\Tweet;
+use App\Models\User;
 
 class TweetController extends Controller
 {
@@ -30,7 +31,7 @@ class TweetController extends Controller
      */
     public function dashboard(): View
     {
-        $tweets = Tweet::where('comments', null)
+        $tweets = Tweet::withTrashed()->where('comments', null)
             ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -282,20 +283,19 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
 
-        if ($tweet->comment) {
-            if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
-                if ($tweet->files) {
-                    foreach ($tweet->files as $key => $file) {
-                        Storage::delete('public/uploads/'.$file->path);
-                    }
-                }
+        // if ($tweet->comment) {
+        //     if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
+        //         // if ($tweet->files) {
+        //         //     foreach ($tweet->files as $key => $file) {
+        //         //         Storage::delete('public/uploads/'.$file->path);
+        //         //     }
+        //         // }
 
-                $tweet->tweet = 'Ce tweet a été masqué.';
-                $tweet->save();
+        //         $tweet->delete();
                 
-                return back();
-            }
-        }
+        //         return back();
+        //     }
+        // }
 
         if (Auth::guard('user')->user()->id === $tweet->user_id) {
             if ($tweet->files) {
@@ -315,10 +315,32 @@ class TweetController extends Controller
     /**
      * 
      */
-    public function addTweetSignale(Request $request): RedirectResponse
+    public function addTweetReport(Tweet $tweet): RedirectResponse
     {
-        echo 'addTweetSignale';
-        die();
+        if(!$tweet)
+        {
+            abort(404);
+        }
+
+        if($tweet->user_id === Auth::guard('user')->user()->id)
+        {
+            abort(403);
+        }
+
+        if(Report::query()->where('tweet_uuid', $tweet->uuid)->where('report_user_id', Auth::guard('user')->user()->id)->first())
+        {
+            abort(403);
+        }
+
+        $report = new Report;
+
+        $report->report_uuid = Str::ulid();
+        $report->report_user_id = Auth::guard('user')->user()->id;
+        $report->tweet_uuid = $tweet->uuid;
+
+        $report->save();
+
+        return back();
     }
 
     /**
@@ -355,7 +377,7 @@ class TweetController extends Controller
 
         $tweet->tweet = $this->hashtag_links($tweet->tweet);
 
-        $comments = Tweet::query()->where('comments', $request->uuid)->with(['user', 'Likes'])
+        $comments = Tweet::query()->withTrashed()->where('comments', $request->uuid)->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         
