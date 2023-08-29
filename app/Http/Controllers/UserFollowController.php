@@ -27,7 +27,7 @@ class UserFollowController extends Controller
      */
     public function dashboardFollowed(): View
     {
-        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->followers->pluck('followed_user_id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
+        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->followers->pluck('follower_user_id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
 
         foreach ($tweets as $tweet)
         {

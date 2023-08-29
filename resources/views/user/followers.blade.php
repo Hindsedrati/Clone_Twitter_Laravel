@@ -38,11 +38,12 @@
                 </div>
                 
                 @auth
-                    <x-divider />
-                    
+                
                     <div class="max-w-xl text-right">
                         @if(auth()->id() !== $profile->id)
-                            @if(in_array(auth()->user()->id, $profile->followers->pluck('follower_user_id')->toArray()))
+                            <x-divider />
+
+                            @if(in_array(auth()->user()->id, $profile->followed->pluck('followed_user_id')->toArray()))
                                 <form method="POST" action="{{ route('user.follow', $profile) }}">
                                     @csrf
                                     @method('DELETE')
@@ -88,10 +89,10 @@
                                     </div>
                                     <div class="flex-1 min-w-0 ml-4">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            {{ $follower->follower_user->username }}
+                                            {{ $follower->follower_user->name }}
                                         </p>
                                         <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            {{'@'}}{{ $follower->follower_user->name }}
+                                            {{'@'}}{{ $follower->follower_user->username }}
                                         </p>
                                     </div>
                                     <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

@@ -21,6 +21,7 @@ use App\Models\Like;
 use App\Models\Report;
 use App\Models\Tweet;
 use App\Models\User;
+use App\Models\Word;
 
 class TweetController extends Controller
 {
@@ -31,7 +32,7 @@ class TweetController extends Controller
      */
     public function dashboard(): View
     {
-        $tweets = Tweet::withTrashed()->where('comments', null)
+        $tweets = Tweet::query()->where('comments', null)
             ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -66,12 +67,24 @@ class TweetController extends Controller
     public function addTweet(Request $request): RedirectResponse
     {
         $request->validate([
-            'tweet' => [ 'required', 'string', 'max:144']
+            'tweet' => [ 'required', 'string', 'max:144', 'min:3' ]
         ], [
             'tweet.required' => 'Veuillez entrer votre tweet',
             'tweet.string' => 'Veuillez entrer une valeur valide',
             'tweet.max' => 'Votre tweet ne doit pas dépasser 144 caractères',
         ]);
+
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
+        }
 
         $file = null;
         $extension = null;
@@ -103,15 +116,15 @@ class TweetController extends Controller
             }
         }
 
-        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
+        $follows = Follow::where('follower_user_id', Auth::guard('user')->user()->id)->get();
 
         foreach ($follows as $follow)
         {
-            $user = User::where('id', $follow->follower_user_id)->first();
-
+            $user = User::where('id', $follow->followed_user_id)->first();
+    
             $user->notify(
                 new RealTimeNotification(
-                    'Nouveau tweet de @'.Auth::guard('user')->user()->name.' !',
+                    'Nouveau tweet de @'.Auth::guard('user')->user()->username.' !',
                     route('tweet.comments', $tweet->uuid)
                 )
             );
@@ -143,6 +156,18 @@ class TweetController extends Controller
             'tweet.string' => 'Veuillez entrer une valeur valide',
             'tweet.max' => 'Votre tweet ne doit pas dépasser 144 caractères',
         ]);
+
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
+        }
 
         $file = null;
         $extension = null;
@@ -221,6 +246,18 @@ class TweetController extends Controller
 
         if (!$tweet) {
             abort(403);
+        }
+
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
         }
 
         $file = null;
@@ -377,7 +414,7 @@ class TweetController extends Controller
 
         $tweet->tweet = $this->hashtag_links($tweet->tweet);
 
-        $comments = Tweet::query()->withTrashed()->where('comments', $request->uuid)->with(['user', 'Likes'])
+        $comments = Tweet::query()->where('comments', $request->uuid)->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         
