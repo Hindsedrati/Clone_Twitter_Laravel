@@ -12,9 +12,9 @@
                         <img src="{{ asset('storage/profiles/' . $profile->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
                         <div class="ml-4 flex-auto">
                             <div class="font-medium">
-                                <b>{{ $profile->username }}</b>
+                                <b>{{ $profile->name }}</b>
                             </div>
-                            <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $profile->name }}</div>
+                            <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $profile->username }}</div>
                         </div>
                     </div>
 

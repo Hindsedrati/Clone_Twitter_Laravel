@@ -4,6 +4,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminUserController;
+
 use App\Http\Controllers\ExplorerController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
@@ -26,10 +29,10 @@ use App\Http\Controllers\UserFollowController;
 // Route::get('/', function () { return view('welcome'); });
 Route::get('/', [TweetController::class, 'dashboard'])->name('tweet.dashboard');
 
-Route::get('/profile/{user:name}', [UserController::class, 'userProfileView'])->name('user.profile');
+Route::get('/profile/{user:username}', [UserController::class, 'userProfileView'])->name('user.profile');
 
-Route::get('/profile/{user:name}/followers', [UserController::class, 'userFollowersView'])->name('user.profile.followers');
-Route::get('/profile/{user:name}/followed', [UserController::class, 'userFollowedView'])->name('user.profile.followed');
+Route::get('/profile/{user:username}/followers', [UserController::class, 'userFollowersView'])->name('user.profile.followers');
+Route::get('/profile/{user:username}/followed', [UserController::class, 'userFollowedView'])->name('user.profile.followed');
 
 Route::get('/tweet/{uuid}/comments', [TweetController::class, 'tweetCommentsView'])->name('tweet.comments');
 
@@ -83,11 +86,13 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::post('/follow/{user}', [UserFollowController::class, 'store'])->name('user.follow');
         Route::delete('/follow/{user}', [UserFollowController::class, 'destroy'])->name('user.follow');
     
-        Route::post('/tweet/{tweet}/signale', [TweetController::class, 'addTweetSignale'])->name('tweet.signale');
+        Route::post('/tweet/{tweet}/report', [TweetController::class, 'addTweetReport'])->name('tweet.report');
 
         Route::post('/uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
 
         Route::get('/notify', [UserController::class, 'testNoti']);
+
+        Route::get('/profile/password/reset', [UserController::class, 'resetPasswordView'])->name('password.reset');
     });
 
     /*
@@ -108,6 +113,26 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
     */
     Route::group(['prefix' => 'admin', 'middleware' => 'checkRole:admin'], function() {
         Route::get('/laravel-websockets');
+
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+        Route::get('/list/users', [AdminController::class, 'listUsers'])->name('admin.list.users');
+        Route::get('/list/reports', [AdminController::class, 'listReports'])->name('admin.list.reports');
+        Route::get('/list/words', [AdminController::class, 'blackListWords'])->name('admin.list.words');
+
+        Route::post('/list/reports/{report}/check', [AdminController::class, 'reportCheck'])->name('admin.report.check');
+        Route::delete('/list/reports/{report}/delete', [AdminController::class, 'reportDelete'])->name('admin.report.delete');
+
+        Route::get('/list/users/{user}/edit', [AdminUserController::class, 'userEdit'])->name('admin.user.edit');
+        Route::patch('/user/{user}/update', [AdminUserController::class, 'update'])->name('admin.user.update');
+
+        Route::post('/user/{user}/updateProfilePicture', [AdminUserController::class, 'updateProfilePicture'])->name('admin.update.picture');
+        Route::post('/user/{user}/updateProfileBanner', [AdminUserController::class, 'updateProfileBanner'])->name('admin.update.banner');
+
+        Route::post('/user/{user}/link/password', [AdminUserController::class, 'resetPassword'])->name('admin.user.link.password');
+        Route::post('/user/{user}/role/update', [AdminUserController::class, 'updateRole'])->name('admin.user.role');
+
+        Route::get('/list/users/{user}/ban', [AdminUserController::class, 'userBan'])->name('admin.user.ban');
     });
 });
 

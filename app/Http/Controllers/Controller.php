@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\View\View;
 
 use App\Models\Tweet;
 
@@ -131,12 +132,19 @@ class Controller extends BaseController
         return $this->array_sort($hashtags, 'count', SORT_DESC);
     }
 
-    public function renderView($view, $data)
+    public function renderView($view, $data): View
     {
         $data['rightbar'] = array("hashtags" => $this->rightbar());
 
         $data['view'] = $view;
 
         return view('main', $data);
+    }
+
+    public function renderAdminView($view, $data): View
+    {
+        $data['view'] = $view;
+
+        return view('admin', $data);
     }
 }

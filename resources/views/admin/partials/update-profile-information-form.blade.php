@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('admin.user.update', $user) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -21,6 +21,17 @@
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        </div>
+
+        <div>
+            <label for="username" class="block text-sm font-medium leading-6 text-gray-300">Username</label>
+            <div class="mt-2">
+                <div class="block border-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 dark:text-gray-300 flex focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-inset focus:border-indigo-500 focus:ring-indigo-500 ring-1 ring-gray-600 ring-inset rounded-md shadow-sm">
+                    <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">@</span>
+                    <input type="text" name="username" id="username" value="{{old('username', $user->username)}}" required autofocus autocomplete="username" minlength="3" maxlength="35" class="bg-transparent block border-0 w-full flex-1 focus:ring-0 pl-1 placeholder:text-gray-400 py-1.5 sm:leading-6 sm:text-sm text-gray-300">
+                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                </div>
+            </div>
         </div>
 
         <div>
