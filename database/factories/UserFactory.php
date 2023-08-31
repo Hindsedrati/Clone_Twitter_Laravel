@@ -39,7 +39,7 @@ class UserFactory extends Factory
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'picture_path' => 'default_profile_picture.png',
-            'banner_path' => '	default_profile_banner.png'
+            'banner_path' => 'default_profile_banner.png'
         ];
     }
 

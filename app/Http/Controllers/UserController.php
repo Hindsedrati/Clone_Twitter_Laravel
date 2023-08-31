@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules;
@@ -64,7 +66,7 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username,
+            'username' => Str::slug($request->username, '.'),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -135,18 +137,14 @@ class UserController extends Controller
      * 
      * @return View user/profile
      */
-    // public function userProfileView(Request $request): View
-    public function userProfileView(User $user): View
+    public function userProfileView(Request $request): View
     {
-        if(!isset($user))
-        {
-            abort(404);
-        }
+        $user = User::query()->whereRaw('LOWER(username) = (?)', [strtolower($request->user)])->firstOrFail();
 
         $tweets = $user->tweets()
             ->orderBy('id', 'desc')
             ->paginate(10);
-        
+
         foreach ($tweets as $tweet)
         {
             $tweet->tweet = $this->hashtag_links($tweet->tweet);

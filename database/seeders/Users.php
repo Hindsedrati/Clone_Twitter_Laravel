@@ -28,7 +28,7 @@ class Users extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'picture_path' => 'default_profile_picture.png',
-            'banner_path' => '	default_profile_banner.png'
+            'banner_path' => 'default_profile_banner.png'
         ]);
 
         User::factory()->count(10)->create();
