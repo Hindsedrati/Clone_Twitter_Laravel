@@ -33,18 +33,17 @@
                         <div class="mr-1 ml-1"> | </div>
 
                         <div class="flex">
-                            {{ $profile->followed->count() }} {{ Str::plural('follow', $profile->followed->count()) }}
+                            {{ $profile->followers->count() }} {{ Str::plural('follow', $profile->followers->count()) }}
                         </div>
                     </div>
                 </div>
                 
                 @auth
-                
                     <div class="max-w-xl text-right">
                         @if(auth()->id() !== $profile->id)
                             <x-divider />
 
-                            @if(in_array(auth()->user()->id, $profile->followed->pluck('followed_user_id')->toArray()))
+                            @if(in_array(auth()->user()->id, $profile->followers->pluck('follower_user_id')->toArray()))
                                 <form method="POST" action="{{ route('user.follow', $profile) }}">
                                     @csrf
                                     @method('DELETE')
@@ -96,24 +95,28 @@
                                             {{'@'}}{{ $follow->followed_user->username }}
                                         </p>
                                     </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        @if(in_array(auth()->user()->id, $follow->followed_user->followed->pluck('followed_user_id')->toArray()))
-                                            <form method="POST" action="{{ route('user.follow', $follow->followed_user) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-primary-button class="">
-                                                    Unfollow
-                                                </x-primary-button>
-                                            </form>
-                                        @else
-                                            <form method="POST" action="{{ route('user.follow', $follow->followed_user) }}">
-                                                @csrf
-                                                <x-primary-button class="">
-                                                    Follow
-                                                </x-primary-button>
-                                            </form>
+                                    @auth
+                                        @if(auth()->id() !== $follow->followed_user->id)
+                                            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                                @if(in_array(auth()->user()->id, $follow->followed_user->followers->pluck('follower_user_id')->toArray()))
+                                                    <form method="POST" action="{{ route('user.follow', $follow->followed_user) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <x-primary-button class="">
+                                                            Unfollow
+                                                        </x-primary-button>
+                                                    </form>
+                                                @else
+                                                    <form method="POST" action="{{ route('user.follow', $follow->followed_user) }}">
+                                                        @csrf
+                                                        <x-primary-button class="">
+                                                            Follow
+                                                        </x-primary-button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         @endif
-                                    </div>
+                                    @endauth
                                 </div>
                             </li>
                         @endforeach
