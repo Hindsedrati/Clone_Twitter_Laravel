@@ -17,7 +17,7 @@
                 <div class="mt-2">
                     <div class="block border-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 dark:text-gray-300 flex focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-inset focus:border-indigo-500 focus:ring-indigo-500 ring-1 ring-gray-600 ring-inset rounded-md shadow-sm sm:max-w-md w-full">
                         <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">@</span>
-                        <input type="text" name="username" id="username" autocomplete="username" minlength="3" maxlength="35" class="bg-transparent block border-0 flex-1 focus:ring-0 pl-1 placeholder:text-gray-400 py-1.5 sm:leading-6 sm:text-sm text-gray-300">
+                        <input type="text" name="username" id="username" autocomplete="username" value="{{ old('username') }}" minlength="3" maxlength="35" class="bg-transparent block border-0 flex-1 focus:ring-0 pl-1 placeholder:text-gray-400 py-1.5 sm:leading-6 sm:text-sm text-gray-300">
                         <x-input-error :messages="$errors->get('username')" class="mt-2" />
                     </div>
                 </div>

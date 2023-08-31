@@ -137,18 +137,14 @@ class UserController extends Controller
      * 
      * @return View user/profile
      */
-    // public function userProfileView(Request $request): View
-    public function userProfileView(User $user): View
+    public function userProfileView(Request $request): View
     {
-        if(!isset($user))
-        {
-            abort(404);
-        }
+        $user = User::query()->whereRaw('LOWER(username) = (?)', [strtolower($request->user)])->firstOrFail();
 
         $tweets = $user->tweets()
             ->orderBy('id', 'desc')
             ->paginate(10);
-        
+
         foreach ($tweets as $tweet)
         {
             $tweet->tweet = $this->hashtag_links($tweet->tweet);
