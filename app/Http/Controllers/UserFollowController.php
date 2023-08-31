@@ -27,7 +27,7 @@ class UserFollowController extends Controller
      */
     public function dashboardFollowed(): View
     {
-        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->followers->pluck('followed_user_id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
+        $tweets = Tweet::whereIn('user_id', Auth::guard('user')->user()->followers->pluck('follower_user_id'))->latest()->with(['user', 'likes'])->paginate(10); // ->dumpRawSql();
 
         foreach ($tweets as $tweet)
         {
@@ -54,8 +54,8 @@ class UserFollowController extends Controller
 
         $user->notify(
             new RealTimeNotification(
-                '@'.Auth::guard('user')->user()->name.' vous a follow !',
-                route('user.profile', ['user' => Auth::guard('user')->user()->name])
+                '@'.Auth::guard('user')->user()->username.' vous a follow !',
+                route('user.profile', ['user' => Auth::guard('user')->user()->username])
             )
         );
 
@@ -78,8 +78,8 @@ class UserFollowController extends Controller
 
         $user->notify(
             new RealTimeNotification(
-                '@'.Auth::guard('user')->user()->name.' vous a unfollow !',
-                route('user.profile', ['user' => Auth::guard('user')->user()->name])
+                '@'.Auth::guard('user')->user()->username.' vous a unfollow !',
+                route('user.profile', ['user' => Auth::guard('user')->user()->username])
             )
         );
 

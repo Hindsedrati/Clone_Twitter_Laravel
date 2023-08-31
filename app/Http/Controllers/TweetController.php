@@ -18,8 +18,10 @@ use App\Models\Analytic;
 use App\Models\File;
 use App\Models\Follow;
 use App\Models\Like;
-use App\Models\User;
+use App\Models\Report;
 use App\Models\Tweet;
+use App\Models\User;
+use App\Models\Word;
 
 class TweetController extends Controller
 {
@@ -30,7 +32,7 @@ class TweetController extends Controller
      */
     public function dashboard(): View
     {
-        $tweets = Tweet::where('comments', null)
+        $tweets = Tweet::query()->where('comments', null)
             ->with(['user', 'Likes'])
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -65,12 +67,24 @@ class TweetController extends Controller
     public function addTweet(Request $request): RedirectResponse
     {
         $request->validate([
-            'tweet' => [ 'required', 'string', 'max:144']
+            'tweet' => [ 'required', 'string', 'max:144', 'min:3' ]
         ], [
             'tweet.required' => 'Veuillez entrer votre tweet',
             'tweet.string' => 'Veuillez entrer une valeur valide',
             'tweet.max' => 'Votre tweet ne doit pas dépasser 144 caractères',
         ]);
+
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
+        }
 
         $file = null;
         $extension = null;
@@ -102,15 +116,15 @@ class TweetController extends Controller
             }
         }
 
-        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
+        $follows = Follow::where('follower_user_id', Auth::guard('user')->user()->id)->get();
 
         foreach ($follows as $follow)
         {
-            $user = User::where('id', $follow->follower_user_id)->first();
-
+            $user = User::where('id', $follow->followed_user_id)->first();
+    
             $user->notify(
                 new RealTimeNotification(
-                    'Nouveau tweet de @'.Auth::guard('user')->user()->name.' !',
+                    'Nouveau tweet de @'.Auth::guard('user')->user()->username.' !',
                     route('tweet.comments', $tweet->uuid)
                 )
             );
@@ -142,6 +156,18 @@ class TweetController extends Controller
             'tweet.string' => 'Veuillez entrer une valeur valide',
             'tweet.max' => 'Votre tweet ne doit pas dépasser 144 caractères',
         ]);
+
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
+        }
 
         $file = null;
         $extension = null;
@@ -222,6 +248,18 @@ class TweetController extends Controller
             abort(403);
         }
 
+        $blacklist = Word::all()->toArray();
+
+        foreach ($blacklist as $key => $word)
+        {
+            if (strpos($request->input('tweet'), $word['word']) !== false)
+            {
+                return back()->withErrors([
+                    'tweet' => 'Votre tweet contient un mot interdit',
+                ]);
+            }
+        }
+
         $file = null;
         $extension = null;
         $path = '';
@@ -282,20 +320,19 @@ class TweetController extends Controller
     {
         $tweet = Tweet::where('uuid', $request->uuid)->firstOrFail();
 
-        if ($tweet->comment) {
-            if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
-                if ($tweet->files) {
-                    foreach ($tweet->files as $key => $file) {
-                        Storage::delete('public/uploads/'.$file->path);
-                    }
-                }
+        // if ($tweet->comment) {
+        //     if (Auth::guard('user')->user()->id === $tweet->comment->user_id) {
+        //         // if ($tweet->files) {
+        //         //     foreach ($tweet->files as $key => $file) {
+        //         //         Storage::delete('public/uploads/'.$file->path);
+        //         //     }
+        //         // }
 
-                $tweet->tweet = 'Ce tweet a été masqué.';
-                $tweet->save();
+        //         $tweet->delete();
                 
-                return back();
-            }
-        }
+        //         return back();
+        //     }
+        // }
 
         if (Auth::guard('user')->user()->id === $tweet->user_id) {
             if ($tweet->files) {
@@ -315,10 +352,32 @@ class TweetController extends Controller
     /**
      * 
      */
-    public function addTweetSignale(Request $request): RedirectResponse
+    public function addTweetReport(Tweet $tweet): RedirectResponse
     {
-        echo 'addTweetSignale';
-        die();
+        if(!$tweet)
+        {
+            abort(404);
+        }
+
+        if($tweet->user_id === Auth::guard('user')->user()->id)
+        {
+            abort(403);
+        }
+
+        if(Report::query()->where('tweet_uuid', $tweet->uuid)->where('report_user_id', Auth::guard('user')->user()->id)->first())
+        {
+            abort(403);
+        }
+
+        $report = new Report;
+
+        $report->report_uuid = Str::ulid();
+        $report->report_user_id = Auth::guard('user')->user()->id;
+        $report->tweet_uuid = $tweet->uuid;
+
+        $report->save();
+
+        return back();
     }
 
     /**

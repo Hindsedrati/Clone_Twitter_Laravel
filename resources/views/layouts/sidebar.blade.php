@@ -11,13 +11,13 @@
             @auth
                 <x-divider />
                 
-                <a href="{{ route('user.profile', auth()->user()->name ) }}" class="p-2 text-left text-white text-sm">My Profile</a>
+                <a href="{{ route('user.profile', auth()->user()->username ) }}" class="p-2 text-left text-white text-sm">My Profile</a>
                 <a href="{{ route('profile.edit') }}" class="p-2 text-left text-white text-sm">Setting</a>
 
                 @if(auth()->user()->role_id == 3)
                     <x-divider />
 
-                    <a href="" class="p-2 text-left text-white text-sm">Admin</a>
+                    <a href="{{ route('admin.dashboard') }}" class="p-2 text-left text-white text-sm">Admin</a>
                 @endif
 
                 <x-divider />

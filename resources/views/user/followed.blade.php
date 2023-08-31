@@ -3,7 +3,7 @@
         <div class="border-gray-900 h-full text-gray-900 w-full">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow rounded-lg">
                 <div class="max-w-xl">
-                    <!-- <b>{{ $profile->username }}</b> <span class="text-muted">{{'@'}}{{ $profile->name }}</span> -->
+                    <!-- <b>{{ $profile->name }}</b> <span class="text-muted">{{'@'}}{{ $profile->username }}</span> -->
                     <div class="flex items-center justify-between">
                         <img src="{{ asset('storage/profiles/' . $profile->banner_path) }}"
                             class="h-auto max-w-full mb-6 rounded-lg"
@@ -13,9 +13,9 @@
                         <img src="{{ asset('storage/profiles/' . $profile->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
                         <div class="ml-4 flex-auto">
                             <div class="font-medium">
-                                <b>{{ $profile->username }}</b>
+                                <b>{{ $profile->name }}</b>
                             </div>
-                            <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $profile->name }}</div>
+                            <div class="mt-1 text-gray-500 text-sm">{{'@'}}{{ $profile->username }}</div>
                         </div>
                     </div>
 
@@ -39,11 +39,12 @@
                 </div>
                 
                 @auth
-                    <x-divider />
-                    
+                
                     <div class="max-w-xl text-right">
                         @if(auth()->id() !== $profile->id)
-                            @if(in_array(auth()->user()->id, $profile->followed->pluck('follower_user_id')->toArray()))
+                            <x-divider />
+
+                            @if(in_array(auth()->user()->id, $profile->followed->pluck('followed_user_id')->toArray()))
                                 <form method="POST" action="{{ route('user.follow', $profile) }}">
                                     @csrf
                                     @method('DELETE')
@@ -89,10 +90,10 @@
                                     </div>
                                     <div class="flex-1 min-w-0 ml-4">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            {{ $follow->followed_user->username }}
+                                            {{ $follow->followed_user->name }}
                                         </p>
                                         <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            {{'@'}}{{ $follow->followed_user->name }}
+                                            {{'@'}}{{ $follow->followed_user->username }}
                                         </p>
                                     </div>
                                     <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

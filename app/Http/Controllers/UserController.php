@@ -36,12 +36,11 @@ class UserController extends Controller
     public function registerStore(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'min:3', 'max:20', 'unique:'.User::class],
-            'username' => ['required', 'string', 'min:3', 'max:35'],
+            'name' => ['required', 'string', 'min:3', 'max:20'],
+            'username' => ['required', 'string', 'min:3', 'max:35', 'unique:'.User::class],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ],
-        [
+        ],[
             'name.required' => 'Veuillez entrer votre nom',
             'name.string' => 'Veuillez entrer un nom valide',
             'name.min' => 'Votre nom doit contenir au moins 3 caractères',
