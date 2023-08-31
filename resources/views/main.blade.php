@@ -57,10 +57,9 @@
     @auth
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <script type="module"> // the change is here
+    <script type="module">
         Echo.private(`App.Models.User.{{ auth()->user()->id }}`)
             .notification((notification) => {
-                console.log('Private RealTimeMessage: ' + notification);
                 console.log(notification);
 
                 Toastify({
