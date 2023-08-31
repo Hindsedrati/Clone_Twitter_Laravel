@@ -33,18 +33,17 @@
                         <div class="mr-1 ml-1"> | </div>
 
                         <div class="flex">
-                            {{ $profile->followed->count() }} {{ Str::plural('follow', $profile->followed->count()) }}
+                            {{ $profile->followers->count() }} {{ Str::plural('follow', $profile->followers->count()) }}
                         </div>
                     </div>
                 </div>
                 
                 @auth
-                
                     <div class="max-w-xl text-right">
                         @if(auth()->id() !== $profile->id)
                             <x-divider />
 
-                            @if(in_array(auth()->user()->id, $profile->followed->pluck('followed_user_id')->toArray()))
+                            @if(in_array(auth()->user()->id, $profile->followers->pluck('follower_user_id')->toArray()))
                                 <form method="POST" action="{{ route('user.follow', $profile) }}">
                                     @csrf
                                     @method('DELETE')

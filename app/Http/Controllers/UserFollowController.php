@@ -43,13 +43,13 @@ class UserFollowController extends Controller
             return response('You cannot follow yourself...', 422);
         }
 
-        if (Auth::guard('user')->user()->followers->pluck('follower_user_id')->contains($user->id)) {
+        if (Auth::guard('user')->user()->followed->pluck('followed_user_id')->contains($user->id)) {
             return response('You cannot follow more than one time', 409);
         }
 
         Follow::create([
-            "follower_user_id" => $user->id,
-            "followed_user_id" => Auth::guard('user')->user()->id,
+            "follower_user_id" => Auth::guard('user')->user()->id,
+            "followed_user_id" => $user->id,
         ]);
 
         $user->notify(
@@ -65,8 +65,8 @@ class UserFollowController extends Controller
     public function destroy(User $user)
     {
         $follow = Follow::query()
-                ->where('followed_user_id', auth()->id())
-                ->where('follower_user_id', $user->id)
+                ->where('follower_user_id', Auth::guard('user')->user()->id)
+                ->where('followed_user_id', $user->id)
                 ->first();
 
         if(!$follow)
