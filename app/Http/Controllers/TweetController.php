@@ -94,7 +94,6 @@ class TweetController extends Controller
 
         $tweet->uuid = Str::ulid();
         $tweet->user_id = Auth::guard('user')->user()->id;
-        $tweet->handle = '';
         $tweet->tweet = $request->input('tweet');
 
         $tweet->save();
@@ -177,7 +176,6 @@ class TweetController extends Controller
 
         $tweetComment->uuid = Str::ulid();
         $tweetComment->user_id = Auth::guard('user')->user()->id;
-        $tweetComment->handle = '';
         $tweetComment->tweet = $request->input('tweet');
         $tweetComment->comments = $tweet->uuid;
 
@@ -268,7 +266,6 @@ class TweetController extends Controller
 
         $tweetRetweet->uuid = Str::ulid();
         $tweetRetweet->user_id = Auth::guard('user')->user()->id;
-        $tweetRetweet->handle = '';
         $tweetRetweet->tweet = $request->tweet;
 
         $tweetRetweet->Retweets = $tweet->uuid;
