@@ -70,8 +70,8 @@ FilePond.create(inputElementBanner).setOptions({
  *        Pusher        *
  * ***********************/
 ///// Import Pusher
-/* */ import Pusher from 'pusher-js';
 /* */ import Echo from 'laravel-echo';
+/* */ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
@@ -81,8 +81,6 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: import.meta.env.VITE_PUSHER_HOST,
     wsPort: import.meta.env.VITE_PUSHER_PORT,
-    wssHost: import.meta.env.VITE_PUSHER_HOST,
-    wssPort: import.meta.env.VITE_PUSHER_PORT,
     forceTLS: false,
     enabledTransports: ['ws'],
     disableStats: true,

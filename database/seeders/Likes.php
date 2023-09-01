@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\Like;
 
-class likes extends Seeder
+class Likes extends Seeder
 {
     /**
      * Run the database seeds.

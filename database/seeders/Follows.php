@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\Follow;
 
-class follows extends Seeder
+class Follows extends Seeder
 {
     /**
      * Run the database seeds.

@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notification;
 
 class RealTimeNotification extends Notification implements ShouldBroadcast
 {
-
     public string $message;
     public string $url;
 
