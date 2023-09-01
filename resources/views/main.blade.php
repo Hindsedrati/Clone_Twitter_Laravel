@@ -46,7 +46,9 @@
                 @include('layouts.sidebar')
 
                 <div class="max-w-7xl mx-auto p-6 lg:p-8 mt-16" style="width: 625px;">
-                    @include($view)
+                    <main class="flex w-full mx-auto px-6">
+                        @include($view)
+                    </main>
                 </div>
 
                 @include('layouts.rightbar')

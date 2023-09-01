@@ -52,7 +52,7 @@
 
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                    <img class="h-9 flex-none rounded-full" src="{{ asset('storage/profiles/' . $user->picture_path) }}" alt="Jese image">
+                                    <img src="{{ asset('storage/profiles/' . $user->picture_path) }}" alt="" class="flex-none h-8 rounded-full w-8" style="object-fit: cover;">
                                     <a href="{{ asset('storage/profiles/' . $user->banner_path) }}" class="ml-4 text-sm font-medium text-blue-500 hover:underline">Voir la banner</a>
                                 </td>
                                 <td class="px-6 py-4">

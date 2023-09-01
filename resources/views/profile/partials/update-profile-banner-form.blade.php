@@ -9,7 +9,7 @@
         </p>
 
         <div class="-space-x-2 flex justify-center mt-6 overflow-hidden">
-            <img class="inline-block rounded-lg w-full" src="{{ asset('storage/profiles/' . $user->banner_path) }}" alt="">
+            <img src="{{ asset('storage/profiles/' . $user->banner_path) }}" alt="" class="flex-none h-8 rounded-full w-8" style="object-fit: cover;">
         </div>
     </header>
 

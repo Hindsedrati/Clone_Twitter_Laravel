@@ -35,7 +35,7 @@
 
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                    <img class="h-9 flex-none rounded-full" src="{{ asset('storage/profiles/' . $report->tweet->user->picture_path) }}" alt="Jese image">
+                                    <img src="{{ asset('storage/profiles/' . $report->tweet->user->picture_path) }}" alt="" class="flex-none h-8 rounded-full w-8" style="object-fit: cover;">
                                     <div class="pl-3">
                                         <div class="text-base font-semibold">{{ $report->tweet->user->name }}</div>
                                         <div class="font-normal text-gray-500">{{'@'}}{{ $report->tweet->user->username }}</div>

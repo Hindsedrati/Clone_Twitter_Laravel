@@ -6,8 +6,8 @@
             <!-- <div class="">
                 <a href="{{ route('user.profile', $tweet->user->username) }}"><b>{{ $tweet->user->name }}</b></a> <span class="ml-1 mr-1 text-gray-500 text-muted text-sm">{{'@'}}{{ $tweet->user->name }}</span> - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
             </div> -->
-            <div class="flex">
-                <img src="{{ asset('storage/profiles/' . $tweet->user->picture_path) }}" alt="" class="h-9 flex-none rounded-full">
+            <div class="flex items-center">
+                <img src="{{ asset('storage/profiles/' . $tweet->user->picture_path) }}" alt="" class="flex-none h-8 rounded-full w-8" style="object-fit: cover;">
                 <div class="ml-4 flex-auto">
                     <div class="font-medium">
                         <a href="{{ route('user.profile', $tweet->user->username) }}"><b>{{ $tweet->user->name }}</b></a>  - <span class="ml-1"><?= convertTimeToString($tweet->created_at); ?></span>
@@ -18,15 +18,15 @@
 
             @auth
                 <!-- DropDown -->
-                <button class="absolute dropdown:block px-2 py-1 right-0 rounded-md text-xs top-0" style="--tw-ring-color: #270000; --tw-ring-inset: inset; --tw-text-opacity: 1; color: rgb(185 28 28 / var(--tw-text-opacity)); --tw-bg-opacity: 1; background-color: #270000;" role="navigation" aria-haspopup="true">
-                    <div class="flex items-center">
+                <button class="absolute bg-gray-500 dropdown:block hover:bg-gray-100 right-0 rounded-full text-xs top-0" role="navigation" aria-haspopup="true">
+                    <div class="flex items-center pb-1">
                         <span class="px-2 text-gray-700">...</span>
                     </div>
-                    <ul class="absolute left-0 hidden w-auto p-2 mt-3 space-y-2 text-sm bg-white border border-gray-100 rounded-lg shadow-lg" aria-label="submenu">
+                    <ul class="absolute bg-white border border-gray-100 hidden mt-3 p-2 right-0 rounded-lg shadow-lg space-y-2 text-sm w-auto" aria-label="submenu">
 
                         <form action="{{ route('tweet.report', $tweet) }}" method="post">
                             @csrf
-                            <input type="submit" value="Signaler" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
+                            <input type="submit" value="Report" class="inline-block w-full px-2 py-1 font-medium text-gray-600 transition-colors duration-150 rounded-md hover:text-gray-900 focus:outline-none focus:shadow-outline hover:bg-gray-100" style="inline-size: max-content;"></input>
                         </form>
                         
                         @if(auth()->user()->id == $tweet->user_id)
@@ -97,7 +97,7 @@
                         <path fill="currentColor" d="M17 12C17 12.5523 16.5523 13 16 13C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11C16.5523 11 17 11.4477 17 12Z"/>
                         <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"/>
                     </svg>
-                    <span>commentaires</span>
+                    <span>Comments</span>
                 </a>
             </div>
 
@@ -140,7 +140,7 @@
 
                 <span>
                     @if($tweet->likes)
-                        {{ $tweet->likes->count() }} {{ Str::plural('like', $tweet->likes->count()) }}
+                        {{ $tweet->likes->count() }} {{ Str::plural('Like', $tweet->likes->count()) }}
                     @else
                         0 like
                     @endif
@@ -156,7 +156,7 @@
                     <path stroke="currentColor" stroke-width="1.5" d="M10 7C10 6.05719 10 5.58579 10.2929 5.29289C10.5858 5 11.0572 5 12 5C12.9428 5 13.4142 5 13.7071 5.29289C14 5.58579 14 6.05719 14 7V17C14 17.9428 14 18.4142 13.7071 18.7071C13.4142 19 12.9428 19 12 19C11.0572 19 10.5858 19 10.2929 18.7071C10 18.4142 10 17.9428 10 17V7Z"/>
                     <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M21 11V17C21 17.9428 21 18.4142 20.7071 18.7071C20.4142 19 19.9428 19 19 19C18.0572 19 17.5858 19 17.2929 18.7071C17 18.4142 17 17.9428 17 17V4C17 3.05719 17 2.58579 17.2929 2.29289C17.5858 2 18.0572 2 19 2C19.9428 2 20.4142 2 20.7071 2.29289C21 2.58579 21 3.05719 21 4V7"/>
                 </svg>
-                <span>{{ $tweet->analytics->count() }}</span>
+                <span>{{ $tweet->analytics->count() }} {{ Str::plural('Analytic', $tweet->analytics->count()) }}</span>
             </div>
         </div>
     </div>
