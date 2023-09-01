@@ -115,12 +115,12 @@ class TweetController extends Controller
             }
         }
 
-        $follows = Follow::where('follower_user_id', Auth::guard('user')->user()->id)->get();
+        $follows = Follow::where('followed_user_id', Auth::guard('user')->user()->id)->get();
 
         foreach ($follows as $follow)
         {
-            $user = User::where('id', $follow->followed_user_id)->first();
-    
+            $user = User::where('id', $follow->follower_user_id)->first();
+
             $user->notify(
                 new RealTimeNotification(
                     'Nouveau tweet de @'.Auth::guard('user')->user()->username.' !',
