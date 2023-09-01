@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.filepond--credits {
+    display: none;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.h-9 {
+    height: 2.25rem;
+}
