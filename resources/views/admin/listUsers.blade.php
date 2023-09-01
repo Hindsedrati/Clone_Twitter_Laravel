@@ -81,8 +81,10 @@
                     </tbody>
                 </table>
             </div>
-
-
+            
+            <div class="pagination flex items-center justify-between">
+                {{ $users->links() }}
+            </div>
         </div>
     </div>
 </main>

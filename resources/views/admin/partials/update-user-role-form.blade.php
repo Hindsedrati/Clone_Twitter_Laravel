@@ -17,9 +17,9 @@
             <x-input-label for="role" :value="__('Role')" />
 
             <select id="role" name="role_id" class="block mt-1 w-full">
-                <option value="user" {{ $user->role_id == '1' ? 'selected' : '' }}>User</option>
-                <option value="modo" {{ $user->role_id == '2' ? 'selected' : '' }}>Modo</option>
-                <option value="admin" {{ $user->role_id == '3' ? 'selected' : '' }}>Admin</option>
+                <option value="1" {{ $user->role_id == '1' ? 'selected' : '' }}>User</option>
+                <option value="2" {{ $user->role_id == '2' ? 'selected' : '' }}>Modo</option>
+                <option value="3" {{ $user->role_id == '3' ? 'selected' : '' }}>Admin</option>
             </select>
 
             <x-input-error class="mt-2" :messages="$errors->get('status')" />

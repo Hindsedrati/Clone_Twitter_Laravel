@@ -56,14 +56,13 @@
                                     </form>
                                 </td>
                             </tr>
-
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
-
-
+            <div class="pagination flex items-center justify-between">
+                {{ $reports->links() }}
+            </div>
         </div>
     </div>
 </main>

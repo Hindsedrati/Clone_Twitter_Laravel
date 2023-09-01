@@ -140,7 +140,8 @@ Route::middleware(["auth:user", 'verified'])->group(function(){
         Route::post('/user/{user}/link/password', [AdminUserController::class, 'resetPassword'])->name('admin.user.link.password');
         Route::post('/user/{user}/role/update', [AdminUserController::class, 'updateRole'])->name('admin.user.role');
 
-        Route::get('/list/users/{user}/ban', [AdminUserController::class, 'userBan'])->name('admin.user.ban');
+        Route::delete('/list/users/{user}/ban', [AdminUserController::class, 'userBan'])->name('admin.user.ban');
+        Route::patch('/list/users/{user}/unban', [AdminUserController::class, 'userUnBan'])->name('admin.user.unban');
     });
 });
 

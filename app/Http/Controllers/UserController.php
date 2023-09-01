@@ -106,7 +106,7 @@ class UserController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-
+        
         if (!$token = auth("user")->attempt($credentials)) {
             return back()->withErrors([
                 'email' => 'Adresse email ou mot de passe incorrect',

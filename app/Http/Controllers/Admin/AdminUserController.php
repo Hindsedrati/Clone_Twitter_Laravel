@@ -26,8 +26,10 @@ class AdminUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function userEdit(User $user)
+    public function userEdit(Request $request)
     {
+        $user = User::query()->withTrashed()->find($request->user);
+
         return $this->renderAdminView('admin.editUser', [ 'user' => $user ]);
     }
 
@@ -125,7 +127,7 @@ class AdminUserController extends Controller
             'role_id.string' => 'Veuillez sélectionner un rôle valide'
         ]);
 
-        if(!in_array($request->role_id, ['user', 'modo', 'admin'])) {
+        if(!in_array($request->role_id, [1, 2, 3])) {
             return back()->with('status', 'role-invalid');
         }
 
@@ -143,10 +145,12 @@ class AdminUserController extends Controller
         return back()->with('status', 'user-ban');
     }
 
-    public function userUnban(User $user)
+    public function userUnban(Request $request)
     {
+        $user = User::query()->withTrashed()->find($request->user);
+
         $user->restore();
 
-        return back()->with('status', 'user-ban');
+        return back()->with('status', 'user-unban');
     }
 }
