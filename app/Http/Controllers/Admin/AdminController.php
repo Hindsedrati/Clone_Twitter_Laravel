@@ -31,7 +31,7 @@ class AdminController extends Controller
 
     public function listUsers()
     {
-        $users = User::all();
+        $users = User::query()->withTrashed()->paginate(10);
 
         return $this->renderAdminView('admin.listUsers', [ 'users' => $users ]);
     }
